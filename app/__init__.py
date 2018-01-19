@@ -2,7 +2,7 @@ from flask import Flask
 import os
 import ConfigParser
 from logging.handlers import RotatingFileHandler
-from flask.ext.cors import CORS
+from flask_cors import CORS
 from flask_sqlalchemy import SQLAlchemy
 
 # SQLAlchemy
@@ -44,8 +44,16 @@ def load_config(app):
     config_filepath = app_dir + '/config.cfg'
     config.read(config_filepath)
 
+    # Gettomg DB Config
+    username = config.get('SQLAlchemy', 'SQL_USERNAME')
+    password = config.get('SQLAlchemy', 'SQL_PASSWORD')
+    server = config.get('SQLAlchemy', 'SQL_HOST')
+    db_name = config.get('SQLAlchemy', 'SQL_DB_NAME')
+
+    sqlalchemy_db_uri = 'mysql://' + username + ':' + password + '@' + server + '/' + db_name
+
     app.config['SERVER_PORT'] = config.get('Application', 'SERVER_PORT')
-    app.config['SQLALCHEMY_DATABASE_URI'] = config.get('SQLAlchemy', 'SQLALCHEMY_DATABASE_URI')
+    app.config['SQLALCHEMY_DATABASE_URI'] = sqlalchemy_db_uri
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
     # Logging path might be relative or starts from the root.
