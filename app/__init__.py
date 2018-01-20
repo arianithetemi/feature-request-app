@@ -1,12 +1,16 @@
 from flask import Flask
-import os
+import os, pymysql
 import ConfigParser
 from logging.handlers import RotatingFileHandler
 from flask_cors import CORS
 from flask_sqlalchemy import SQLAlchemy
+from flask.ext.bcrypt import Bcrypt
 
 # SQLAlchemy
 db = SQLAlchemy();
+
+# Initialize bcrypt
+bcrypt = Bcrypt()
 
 def create_app():
     # Here we  create flask instance
@@ -23,6 +27,9 @@ def create_app():
 
     # Initialize SQLAlchemy
     db.init_app(app)
+
+    # Initialize bcrypt
+    bcrypt.init_app(app)
 
     # Init modules
     init_modules(app)
@@ -50,7 +57,7 @@ def load_config(app):
     server = config.get('SQLAlchemy', 'SQL_HOST')
     db_name = config.get('SQLAlchemy', 'SQL_DB_NAME')
 
-    sqlalchemy_db_uri = 'mysql://' + username + ':' + password + '@' + server + '/' + db_name
+    sqlalchemy_db_uri = 'mysql+pymysql://' + username + ':' + password + '@' + server + '/' + db_name
 
     app.config['SERVER_PORT'] = config.get('Application', 'SERVER_PORT')
     app.config['SQLALCHEMY_DATABASE_URI'] = sqlalchemy_db_uri
