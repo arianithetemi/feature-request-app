@@ -1,4 +1,4 @@
-from flask import Flask
+from flask import Flask, g
 import os, pymysql
 import ConfigParser
 from logging.handlers import RotatingFileHandler
@@ -62,7 +62,7 @@ def load_config(app):
     app.config['SERVER_PORT'] = config.get('Application', 'SERVER_PORT')
     app.config['SQLALCHEMY_DATABASE_URI'] = sqlalchemy_db_uri
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-    app.config['SECRET_KEY'] = 'thisisthesecretkey'
+    app.config['SECRET_KEY'] = config.get('Application', 'SECRET_KEY')
 
     # Logging path might be relative or starts from the root.
     # If it's relative then be sure to prepend the path with the application's root directory path.
@@ -74,6 +74,18 @@ def load_config(app):
 
     app.config['LOG_LEVEL'] = config.get('Logging', 'LEVEL').upper()
 
+
+# Get the path to the application directory, that's where the config file resides.
+par_dir = os.path.join(__file__, os.pardir)
+par_dir_abs_path = os.path.abspath(par_dir)
+app_dir = os.path.dirname(par_dir_abs_path)
+
+# Read config file
+config = ConfigParser.RawConfigParser()
+config_filepath = app_dir + '/config.cfg'
+config.read(config_filepath)
+
+secret_key = config.get('Application', 'SECRET_KEY')
 
 def configure_logging(app):
     ''' Configure the app's logging.
