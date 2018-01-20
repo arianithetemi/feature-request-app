@@ -12,6 +12,9 @@ db = SQLAlchemy();
 # Initialize bcrypt
 bcrypt = Bcrypt()
 
+# Generating random 24 chars for secret key
+secret_key = os.urandom(24).encode('hex')
+
 def create_app():
     # Here we  create flask instance
     app = Flask(__name__)
@@ -62,7 +65,7 @@ def load_config(app):
     app.config['SERVER_PORT'] = config.get('Application', 'SERVER_PORT')
     app.config['SQLALCHEMY_DATABASE_URI'] = sqlalchemy_db_uri
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-    app.config['SECRET_KEY'] = config.get('Application', 'SECRET_KEY')
+    app.config['SECRET_KEY'] = os.urandom(24).encode('hex')
 
     # Logging path might be relative or starts from the root.
     # If it's relative then be sure to prepend the path with the application's root directory path.
@@ -73,19 +76,6 @@ def load_config(app):
         app.config['LOG_PATH'] = app_dir + '/' + log_path
 
     app.config['LOG_LEVEL'] = config.get('Logging', 'LEVEL').upper()
-
-
-# Get the path to the application directory, that's where the config file resides.
-par_dir = os.path.join(__file__, os.pardir)
-par_dir_abs_path = os.path.abspath(par_dir)
-app_dir = os.path.dirname(par_dir_abs_path)
-
-# Read config file
-config = ConfigParser.RawConfigParser()
-config_filepath = app_dir + '/config.cfg'
-config.read(config_filepath)
-
-secret_key = config.get('Application', 'SECRET_KEY')
 
 def configure_logging(app):
     ''' Configure the app's logging.

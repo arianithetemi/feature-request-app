@@ -2,7 +2,7 @@ import uuid, json, decimal, datetime, jwt
 from flask import Blueprint, request, jsonify, make_response
 from app.models.user import User
 from app.models.role import Role
-from app import db, bcrypt
+from app import db, bcrypt, secret_key
 from functools import wraps
 from app.utils.auth import token_required
 
@@ -26,7 +26,7 @@ def auth():
 
     # Checking password
     if bcrypt.check_password_hash(user.password, data['password']):
-        token = jwt.encode({'public_id': user.public_id, 'exp': datetime.datetime.utcnow() + datetime.timedelta(minutes=30)}, 'thisisthesecretkey')
+        token = jwt.encode({'public_id': user.public_id, 'exp': datetime.datetime.utcnow() + datetime.timedelta(minutes=30)}, secret_key)
 
         return jsonify({'message': 'Successfully login', 'token': token.decode('UTF-8'), 'role': user.role.name})
 
