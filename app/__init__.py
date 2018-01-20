@@ -4,7 +4,7 @@ import ConfigParser
 from logging.handlers import RotatingFileHandler
 from flask_cors import CORS
 from flask_sqlalchemy import SQLAlchemy
-from flask.ext.bcrypt import Bcrypt
+from flask_bcrypt import Bcrypt
 
 # SQLAlchemy
 db = SQLAlchemy();

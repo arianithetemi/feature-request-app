@@ -1,21 +1,14 @@
 import json, datetime
 from app import db
-from app.models.role import Role
 from sqlalchemy.ext.declarative import DeclarativeMeta
 from uuid import UUID
 
-class User(db.Model):
-    __tablename__ = 'user'
-    __table_args__ = {'mysql_engine': 'InnoDB'}
-    id = db.Column(db.Integer, primary_key=True)
-    public_id = db.Column(db.String(50), unique=True)
-    first_name = db.Column(db.String(40))
-    last_name = db.Column(db.String(40))
-    username = db.Column(db.String(30))
-    active = db.Column(db.Boolean)
-    email_address = db.Column(db.String(40))
-    password = db.Column(db.String(100))
-    role = db.relationship('Role', backref='user', uselist=False)
+class Role(db.Model):
+    __tablename_ = 'role'
+    id = db.Column(db.Integer(), primary_key=True)
+    name = db.Column(db.String(80), unique=True)
+    description = db.Column(db.String(255))
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
 
     RELATIONSHIPS_TO_DICT = True
 
@@ -37,17 +30,9 @@ class User(db.Model):
                     res[relation.key] = None
                 elif isinstance(value.__class__, DeclarativeMeta):
                     res[relation.key] = value.to_dict(backref=self.__table__)
+                elif isinstance(value, datetime):
+                    res[relation.key] = value.isoformat()
                 else:
                     res[relation.key] = [i.to_dict(backref=self.__table__)
                                          for i in value]
         return res
-
-    def to_json(self, rel=None):
-        def extended_encoder(x):
-            if isinstance(x, datetime):
-                return x.isoformat()
-            if isinstance(x, UUID):
-                return str(x)
-        if rel is None:
-            rel = self.RELATIONSHIPS_TO_DICT
-        return json.dumps(self.to_dict(rel), default=extended_encoder)
