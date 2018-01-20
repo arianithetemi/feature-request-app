@@ -92,3 +92,37 @@ def activate_user(public_id):
     db.session.commit()
 
     return jsonify({'message': 'The user has been activated!'})
+
+@mod_user_api.route('/update/<public_id>', methods=['PUT'])
+def modify_user(public_id):
+    # query user in db by public_id
+    user = User.query.filter_by(public_id=public_id).first()
+
+    # if user not found
+    if not user:
+        return jsonify({'message': 'No user found!'})
+
+    # Getting json data from request
+    data = request.get_json()
+
+    new_password = bcrypt.generate_password_hash(data['password'])
+
+    user.first_name = data['first_name']
+    user.last_name = data['last_name']
+    user.email_address = data['email_address']
+    user.password = new_password
+    db.session.commit()
+
+    # building JSON object for found user
+    user_data = {}
+    user_data['public_id'] = user.public_id
+    user_data['first_name'] = user.first_name
+    user_data['last_name'] = user.last_name
+    user_data['username'] = user.username
+    user_data['email_address'] = user.email_address
+    user_data['role'] = user.role.name
+    user_data['active'] = user.active
+    user_data['password'] = user.password
+
+    # returning user_data in json
+    return jsonify({'user': user_data})
