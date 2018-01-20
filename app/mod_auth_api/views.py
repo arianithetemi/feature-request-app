@@ -26,14 +26,11 @@ def auth():
 
     # Checking password
     if bcrypt.check_password_hash(user.password, data['password']):
-        token = jwt.encode({'public_id': user.public_id, 'exp': datetime.datetime.utcnow() + datetime.timedelta(minutes=30)}, secret_key)
+        if user.active:
+            token = jwt.encode({'public_id': user.public_id, 'exp': datetime.datetime.utcnow() + datetime.timedelta(minutes=30)}, secret_key)
 
-        return jsonify({'message': 'Successfully login', 'token': token.decode('UTF-8'), 'role': user.role.name})
+            return jsonify({'message': 'Successfully login', 'token': token.decode('UTF-8'), 'role': user.role.name})
+        return jsonify({'message': 'User is not activated'})
 
     # if password is wrong
     return jsonify({'message': 'Password is invalid'}), 401, {'WWW-Authenticate': 'Basic realm="Login required"'}
-
-@mod_auth_api.route('/dashboard', methods=['GET'])
-@token_required
-def dashboard(current_user):
-    return jsonify({'user': current_user.username})

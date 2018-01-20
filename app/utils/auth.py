@@ -24,3 +24,26 @@ def token_required(f):
         return f(current_user, *args, **kwargs)
 
     return decorated
+
+
+def role_required(role):
+    def wrapper(f):
+        @wraps(f)
+        def wrapped(*args, **kwargs):
+            if 'x-access-token' in request.headers:
+                token = request.headers['x-access-token']
+
+            try:
+                data = jwt.decode(token, secret_key)
+                current_user = User.query.filter_by(public_id=data['public_id']).first()
+            except:
+                return jsonify({'message': 'Token is invalid!'}), 401
+
+            print current_user.role.name
+            print role
+            if current_user.role.name != role:
+                return jsonify({'message': 'Permission denied!'}), 401
+
+            return f(*args, **kwargs)
+        return wrapped
+    return wrapper
