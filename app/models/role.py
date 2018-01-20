@@ -6,7 +6,7 @@ from uuid import UUID
 class Role(db.Model):
     __tablename_ = 'role'
     id = db.Column(db.Integer(), primary_key=True)
-    name = db.Column(db.String(80), unique=True)
+    name = db.Column(db.String(80))
     description = db.Column(db.String(255))
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
 

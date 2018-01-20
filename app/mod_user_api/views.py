@@ -126,3 +126,22 @@ def modify_user(public_id):
 
     # returning user_data in json
     return jsonify({'user': user_data})
+
+@mod_user_api.route('/delete/<public_id>', methods=['DELETE'])
+def delete_user(public_id):
+    # finding user by public_id
+    user = User.query.filter_by(public_id=public_id).first()
+
+    # finding role of this user
+    role = Role.query.filter_by(user_id=user.id).first()
+
+    # if user not found
+    if not user:
+        return jsonify({'message': 'No user found!'})
+
+    # deleting user and its role from db
+    db.session.delete(user)
+    db.session.delete(role)
+    db.session.commit()
+
+    return jsonify({'message': 'The user has been deleted!'})
