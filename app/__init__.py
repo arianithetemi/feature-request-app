@@ -62,6 +62,7 @@ def load_config(app):
     app.config['SERVER_PORT'] = config.get('Application', 'SERVER_PORT')
     app.config['SQLALCHEMY_DATABASE_URI'] = sqlalchemy_db_uri
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+    app.config['SECRET_KEY'] = 'thisisthesecretkey'
 
     # Logging path might be relative or starts from the root.
     # If it's relative then be sure to prepend the path with the application's root directory path.
@@ -102,6 +103,8 @@ def init_modules(app):
     # Import blueprint modules
     from app.mod_main.views import mod_main
     from app.mod_user_api.views import mod_user_api
+    from app.mod_auth_api.views import mod_auth_api
 
     app.register_blueprint(mod_main)
     app.register_blueprint(mod_user_api)
+    app.register_blueprint(mod_auth_api)

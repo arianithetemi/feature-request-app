@@ -3,3 +3,4 @@ Flask-Cors==2.1.2
 Flask-SQLAlchemy==2.3.2
 PyMySQL==0.7.11
 Flask-Bcrypt==0.7.1
+PyJWT==1.5.3
