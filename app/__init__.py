@@ -1,4 +1,4 @@
-from flask import Flask, g
+from flask import Flask
 import os, pymysql
 import ConfigParser
 from logging.handlers import RotatingFileHandler
@@ -54,13 +54,21 @@ def load_config(app):
     config_filepath = app_dir + '/config.cfg'
     config.read(config_filepath)
 
-    # Gettomg DB Config
-    username = config.get('SQLAlchemy', 'SQL_USERNAME')
-    password = config.get('SQLAlchemy', 'SQL_PASSWORD')
-    server = config.get('SQLAlchemy', 'SQL_HOST')
-    db_name = config.get('SQLAlchemy', 'SQL_DB_NAME')
+    # Testing app config path
+    testapp_config_filepath = app_dir + '/test_app_config.cfg'
 
-    sqlalchemy_db_uri = 'mysql+pymysql://' + username + ':' + password + '@' + server + '/' + db_name
+    # Checking if config.cfg file exists and read from it, if not read from test config
+    if os.path.isfile(config_filepath):
+        config.read(config_filepath)
+        # Getting DB Config
+        username = config.get('SQLAlchemy', 'SQL_USERNAME')
+        password = config.get('SQLAlchemy', 'SQL_PASSWORD')
+        server = config.get('SQLAlchemy', 'SQL_HOST')
+        db_name = config.get('SQLAlchemy', 'SQL_DB_NAME')
+        sqlalchemy_db_uri = 'mysql+pymysql://' + username + ':' + password + '@' + server + '/' + db_name
+    else:
+        config.read(testapp_config_filepath)
+        sqlalchemy_db_uri = config.get('SQLAlchemy', 'SQLALCHEMY_DATABASE_URI')
 
     app.config['SERVER_PORT'] = config.get('Application', 'SERVER_PORT')
     app.config['SQLALCHEMY_DATABASE_URI'] = sqlalchemy_db_uri
