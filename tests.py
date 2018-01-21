@@ -20,5 +20,20 @@ class BaseTestCase(TestCase):
         db.session.remove()
         db.drop_all()
 
+        ###############
+        #### tests ####
+        ###############
+
+class UserAPITestCase(BaseTestCase):
+
+    # Testing getting all users without token provided
+    def test_get_users_endpoint(self):
+        # Making request to endpoint
+        response = self.client.get('/api/user/')
+        # Decoding JSON response
+        data = json.loads(response.data.decode('utf8'))
+        # Comparing JSON data
+        self.assertEqual(data['message'], "Token is missing")
+
 if __name__ == "__main__":
     unittest.main()
