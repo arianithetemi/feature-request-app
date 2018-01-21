@@ -39,8 +39,6 @@ def role_required(role):
             except:
                 return jsonify({'message': 'Token is invalid!'}), 401
 
-            print current_user.role.name
-            print role
             if current_user.role.name != role:
                 return jsonify({'message': 'Permission denied!'}), 401
 
