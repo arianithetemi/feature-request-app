@@ -11,9 +11,9 @@ class User(db.Model):
     public_id = db.Column(db.String(50), unique=True)
     first_name = db.Column(db.String(40))
     last_name = db.Column(db.String(40))
-    username = db.Column(db.String(30))
+    username = db.Column(db.String(30), unique=True)
     active = db.Column(db.Boolean)
-    email_address = db.Column(db.String(40))
+    email_address = db.Column(db.String(40), unique=True)
     password = db.Column(db.String(100))
     role = db.relationship('Role', backref='user', uselist=False)
 

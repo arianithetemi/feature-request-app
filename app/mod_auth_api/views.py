@@ -18,11 +18,14 @@ def auth():
         return {'message': 'Username or password is invalid'}, 401, {'WWW-Authenticate': 'Basic realm="Login required"'}
 
     # Finding user by username
-    user = User.query.filter_by(username=data['username']).first()
+    if '@' in data['username_email']:
+        user = User.query.filter_by(email_address=data['username_email']).first()
+    else:
+        user = User.query.filter_by(username=data['username_email']).first()
 
     # If user not found
     if not user:
-        return jsonify({'message': 'Username is invalid'}), 401, {'WWW-Authenticate': 'Basic realm="Login required"'}
+        return jsonify({'message': 'Username or Email is invalid'}), 401, {'WWW-Authenticate': 'Basic realm="Login required"'}
 
     # Checking password
     if bcrypt.check_password_hash(user.password, data['password']):
