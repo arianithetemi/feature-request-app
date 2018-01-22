@@ -133,7 +133,7 @@ def modify_user(current_user, public_id):
     # Getting json data from request
     data = request.get_json()
 
-    # Checking the old password
+    # Checking the password
     if not bcrypt.check_password_hash(user.password, data['password']):
         return jsonify({'message': 'Password is invalid!'})
 
@@ -156,6 +156,38 @@ def modify_user(current_user, public_id):
 
     # returning user_data in json
     return jsonify({'user': user_data})
+
+'''
+    Changing Password Endpoint - Token is required
+'''
+@mod_user_api.route('/change-password/<public_id>', methods=['PUT'])
+@token_required
+def change_user_password(current_user, public_id):
+    # finding user with public_id
+    user = User.query.filter_by(public_id=public_id).first()
+
+    if not user:
+        return jsonify({'message': 'No user found!'})
+
+    # Getting data
+    data = request.get_json()
+
+    # Checking password
+    if not bcrypt.check_password_hash(user.password, data['current_password']):
+        return jsonify({'message': 'Password is invalid!'})
+
+    # Checking new password and confirm new password
+    if data['new_password'] != data['confirm_new_password']:
+        return jsonify({'message': 'New Password and Confirm New Password do not match!'})
+
+    new_password_hash = bcrypt.generate_password_hash(data['new_password'])
+
+    # Changing password in DB
+    user.password = new_password_hash
+    db.session.commit()
+
+    return jsonify({'message': 'Password successfully changed!'})
+
 
 '''
     Delete User Endpoint - Token is required
