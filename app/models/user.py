@@ -12,6 +12,7 @@ class User(db.Model):
     first_name = db.Column(db.String(40))
     last_name = db.Column(db.String(40))
     username = db.Column(db.String(30), unique=True)
+    company = db.Column(db.String(30))
     active = db.Column(db.Boolean)
     email_address = db.Column(db.String(40), unique=True)
     password = db.Column(db.String(100))

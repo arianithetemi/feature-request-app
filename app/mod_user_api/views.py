@@ -7,7 +7,9 @@ from app.utils.auth import token_required, role_required
 
 mod_user_api = Blueprint('user_api', __name__, url_prefix='/api/user')
 
-''' Get All Users Endpoint - Token is required '''
+'''
+    Get All Users Endpoint - Token is required
+'''
 @mod_user_api.route('/', methods=['GET'])
 @token_required
 @role_required('admin')
@@ -31,7 +33,9 @@ def get_users(current_user):
         # Returning array of users in json
         return jsonify({'users': output})
 
-''' Creating New User Endpoint '''
+'''
+    Creating New User Endpoint
+'''
 @mod_user_api.route('/add', methods=['POST'])
 def add_user():
     # Getting json data from request
@@ -40,11 +44,15 @@ def add_user():
     if db.session.query(User).filter_by(username=data['username']).count():
         return jsonify({'message': 'Username is taken!'})
 
+    # Checking password with confirm password
+    if data['password'] != data['confirm_password']:
+        return jsonify({'message': 'Password and Confirm Password do not match!'})
+
     # Hashing password
     hash_password = bcrypt.generate_password_hash(data['password'])
 
     # Creating instance of new user with json data values
-    user = User(public_id=str(uuid.uuid4()), first_name=data['first_name'], last_name=data['last_name'], username=data['username'], active=False, email_address=data['email_address'], password=hash_password)
+    user = User(public_id=str(uuid.uuid4()), first_name=data['first_name'], last_name=data['last_name'], username=data['username'], company=data['company'], active=False, email_address=data['email_address'], password=hash_password)
 
     # Setting description of the role
     description = ''
@@ -64,7 +72,9 @@ def add_user():
     # Returning message in json
     return jsonify({'message': 'Successfully user created!', 'status': 'inactive'})
 
-''' Get One User Endpoint - Token is required '''
+'''
+    Get One User Endpoint - Token is required
+'''
 @mod_user_api.route('/<public_id>', methods=['GET'])
 @token_required
 @role_required('admin')
@@ -107,10 +117,11 @@ def activate_user(current_user, public_id):
 
     return jsonify({'message': 'The user has been activated!'})
 
-''' Update User Endpoint - Token is required '''
+'''
+    Update User Endpoint - Token is required
+'''
 @mod_user_api.route('/update/<public_id>', methods=['PUT'])
 @token_required
-@role_required('admin')
 def modify_user(current_user, public_id):
     # query user in db by public_id
     user = User.query.filter_by(public_id=public_id).first()
@@ -122,12 +133,14 @@ def modify_user(current_user, public_id):
     # Getting json data from request
     data = request.get_json()
 
-    new_password = bcrypt.generate_password_hash(data['password'])
+    # Checking the old password
+    if not bcrypt.check_password_hash(user.password, data['password']):
+        return jsonify({'message': 'Password is invalid!'})
 
     user.first_name = data['first_name']
     user.last_name = data['last_name']
     user.email_address = data['email_address']
-    user.password = new_password
+    user.company = data['company']
     db.session.commit()
 
     # building JSON object for found user
@@ -135,16 +148,18 @@ def modify_user(current_user, public_id):
     user_data['public_id'] = user.public_id
     user_data['first_name'] = user.first_name
     user_data['last_name'] = user.last_name
+    user_data['company'] = user.company
     user_data['username'] = user.username
     user_data['email_address'] = user.email_address
     user_data['role'] = user.role.name
     user_data['active'] = user.active
-    user_data['password'] = user.password
 
     # returning user_data in json
     return jsonify({'user': user_data})
 
-''' Delete User Endpoint - Token is required '''
+'''
+    Delete User Endpoint - Token is required
+'''
 @mod_user_api.route('/delete/<public_id>', methods=['DELETE'])
 @token_required
 @role_required('admin')

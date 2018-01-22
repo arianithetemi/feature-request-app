@@ -17,7 +17,7 @@ def auth():
     if not data:
         return {'message': 'Username or password is invalid'}, 401, {'WWW-Authenticate': 'Basic realm="Login required"'}
 
-    # Finding user by username
+    # Finding user by username or email
     if '@' in data['username_email']:
         user = User.query.filter_by(email_address=data['username_email']).first()
     else:
@@ -29,6 +29,7 @@ def auth():
 
     # Checking password
     if bcrypt.check_password_hash(user.password, data['password']):
+        # If user is active give the token
         if user.active:
             token = jwt.encode({'public_id': user.public_id, 'exp': datetime.datetime.utcnow() + datetime.timedelta(minutes=30)}, secret_key)
 
