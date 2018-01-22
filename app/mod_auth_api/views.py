@@ -18,10 +18,10 @@ def auth():
         return {'message': 'Username or password is invalid'}, 401, {'WWW-Authenticate': 'Basic realm="Login required"'}
 
     # Finding user by username or email
-    if '@' in data['username_email']:
-        user = User.query.filter_by(email_address=data['username_email']).first()
+    if '@' in data['username_email'].strip():
+        user = User.query.filter_by(email_address=data['username_email'].strip()).first()
     else:
-        user = User.query.filter_by(username=data['username_email']).first()
+        user = User.query.filter_by(username=data['username_email'].strip()).first()
 
     # If user not found
     if not user:
