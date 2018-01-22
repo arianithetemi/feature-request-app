@@ -19,7 +19,7 @@ body {
 
 .info, .sign-up {
    margin-top: 15%;
-   color: #585858;
+   color: #4c4c4c;
 }
 
 .info h1 {
@@ -42,10 +42,10 @@ body {
   box-shadow: none;
 }
 
-.btn-block:focus, .btn-block:active, btn-block:visited {
+/* .btn-block:focus, .btn-block:active, btn-block:visited {
    border: none!important;
    outline: none!important;
-}
+} */
 
 #sign-up {
    display: none;
@@ -54,4 +54,9 @@ body {
 #sign-in h2, #sign-up h2 {
    margin-top: 10px;
    margin-bottom: 20px;
+}
+
+.form-title {
+   text-align: center;
+   font-weight: bold;
 }
