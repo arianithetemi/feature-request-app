@@ -47,6 +47,16 @@ body {
    outline: none!important;
 } */
 
+.password-cont {
+   margin-bottom: .5rem;
+}
+
+.sign-in-err {
+   margin-bottom: .5rem;
+   color: red;
+   text-align: left;
+}
+
 #sign-up {
    display: none;
 }

@@ -14,8 +14,8 @@ def auth():
     data = request.get_json()
 
     # If username or password not provided
-    if not data:
-        return {'message': 'Username or password is invalid'}, 401, {'WWW-Authenticate': 'Basic realm="Login required"'}
+    if data == {}:
+        return {'message': 'Username or password is invalid!'}
 
     # Finding user by username or email
     if '@' in data['username_email'].strip():
@@ -25,7 +25,7 @@ def auth():
 
     # If user not found
     if not user:
-        return jsonify({'message': 'Username or Email is invalid'}), 401, {'WWW-Authenticate': 'Basic realm="Login required"'}
+        return jsonify({'message': 'Username or Email is invalid!'})
 
     # Checking password
     if bcrypt.check_password_hash(user.password, data['password']):
@@ -34,7 +34,7 @@ def auth():
             token = jwt.encode({'public_id': user.public_id, 'exp': datetime.datetime.utcnow() + datetime.timedelta(minutes=30)}, secret_key)
 
             return jsonify({'message': 'Successfully login', 'token': token.decode('UTF-8'), 'role': user.role.name})
-        return jsonify({'message': 'User is not activated'})
+        return jsonify({'message': 'User is not activated!'})
 
     # if password is wrong
-    return jsonify({'message': 'Password is invalid'}), 401, {'WWW-Authenticate': 'Basic realm="Login required"'}
+    return jsonify({'message': 'Password is invalid!'})
