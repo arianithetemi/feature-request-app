@@ -11,8 +11,8 @@ mod_user_api = Blueprint('user_api', __name__, url_prefix='/api/user')
     Get All Users Endpoint - Token is required
 '''
 @mod_user_api.route('/', methods=['GET'])
-# @token_required
-# @role_required('admin')
+@token_required
+@role_required('admin')
 def get_users():
         # Gell all users from db
         users = User.query.all()
