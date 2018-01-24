@@ -10,8 +10,7 @@ def index():
 @mod_main.route('/dashboard', methods=['GET'])
 @token_required
 def dashboard(current_user):
-
-    if current_user.role == 'client':
+    if current_user.role.name == 'client':
         return render_template('client_dashboard.html')
     else:
         return render_template('admin_dashboard.html')

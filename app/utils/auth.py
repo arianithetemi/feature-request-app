@@ -1,5 +1,5 @@
 import jwt
-from flask import request, jsonify, g
+from flask import request, jsonify, render_template
 from app.models.user import User
 from functools import wraps
 from app import secret_key
@@ -9,17 +9,20 @@ def token_required(f):
     def decorated(*args, **kwargs):
         token = None
 
+        # print request.headers
+
         if 'x-access-token' in request.headers:
             token = request.headers['x-access-token']
 
         if not token:
-            return jsonify({'message': 'Token is missing'}), 401
+            return jsonify({'message': 'Token is missing'})
+            # return render_template('index.html')
 
         try:
             data = jwt.decode(token, secret_key)
             current_user = User.query.filter_by(public_id=data['public_id']).first()
         except:
-            return jsonify({'message': 'Token is invalid!'}), 401
+            return jsonify({'message': 'Token is invalid!'})
 
         return f(current_user, *args, **kwargs)
 

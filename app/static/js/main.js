@@ -33,32 +33,40 @@ $(document).ready(function() {
                if(result.message == 'Successfully login') {
                   $('.sign-in-err').html('');
                   localStorage.setItem('token', result.token);
-                  console.log(localStorage.getItem('token'));
+                  // localStorage.setItem('isLogged', true);
 
-                  // $(function(){
-                  //   var tokenValue = $("meta[name='X-CSRFToken']").attr(localStorage.getItem('token'));
-                  //   $.ajaxSetup({
-                  //     headers: {'x-access-token': tokenValue}
-                  //   });
-                  // });
-
-                  // $.ajax({
-                  //   url: "/dashboard",
-                  //   type: 'GET',
-                  //   headers: {"x-access-token": localStorage.getItem('token')},
-                  //   success: function(data) {
-                  //      document.write(data);
-                  //      $.ajaxSetup({
-                  //        headers: {"x-access-token": localStorage.getItem('token')}
-                  //      });
-                  //   }
-                  // });
+                  $.ajax({
+                    url: "/dashboard",
+                    type: 'GET',
+                    headers: {"x-access-token": localStorage.getItem('token')},
+                    success: function(data) {
+                       document.write(data);
+                       $.ajaxSetup({
+                         headers: {"x-access-token": localStorage.getItem('token')}
+                       });
+                    }
+                  });
                }
             }
           });
        }
    };
+
    ko.applyBindings(SignInViewModel);
 
-
+   if(localStorage.getItem('token') !== null) {
+      $.ajax({
+         url: "/dashboard",
+         type: 'GET',
+         headers: {"x-access-token": localStorage.getItem('token')},
+         success: function(data) {
+            if (typeof data == 'string') {
+               document.write(data);
+            } else {
+               localStorage.removeItem('token');
+               window.location.href = '/';
+            }
+         }
+      });
+   }
 });

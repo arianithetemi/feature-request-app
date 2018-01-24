@@ -1,5 +1,5 @@
 import uuid, json, decimal, datetime
-from flask import Blueprint, request, jsonify
+from flask import Blueprint, request, jsonify, Response
 from app.models.user import User
 from app.models.role import Role
 from app import db, bcrypt
@@ -11,9 +11,9 @@ mod_user_api = Blueprint('user_api', __name__, url_prefix='/api/user')
     Get All Users Endpoint - Token is required
 '''
 @mod_user_api.route('/', methods=['GET'])
-@token_required
-@role_required('admin')
-def get_users(current_user):
+# @token_required
+# @role_required('admin')
+def get_users():
         # Gell all users from db
         users = User.query.all()
 
@@ -31,7 +31,8 @@ def get_users(current_user):
             output.append(user_data)
 
         # Returning array of users in json
-        return jsonify({'users': output})
+        # return jsonify({'users': output})
+        return Response(response=json.dumps(output), status=200, mimetype="application/json")
 
 '''
     Creating New User Endpoint

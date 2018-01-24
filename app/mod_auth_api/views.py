@@ -31,7 +31,7 @@ def auth():
     if bcrypt.check_password_hash(user.password, data['password']):
         # If user is active give the token
         if user.active:
-            token = jwt.encode({'public_id': user.public_id, 'exp': datetime.datetime.utcnow() + datetime.timedelta(minutes=30)}, secret_key)
+            token = jwt.encode({'public_id': user.public_id, 'exp': datetime.datetime.utcnow() + datetime.timedelta(minutes=120)}, secret_key)
 
             return jsonify({'message': 'Successfully login', 'token': token.decode('UTF-8'), 'role': user.role.name})
         return jsonify({'message': 'User is not activated!'})
