@@ -8,11 +8,12 @@
 </div>
 
 <script>
-   $(document).ready(function() {
+   // $(document).ready(function() {
+      $(".se-pre-con").delay(600).fadeOut('slow');
       $('#logout').click(function() {
          localStorage.removeItem('token');
          window.location.href = '/';
       });
-   });
+   // });
 </script>
 {% endblock %}
