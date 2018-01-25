@@ -62,9 +62,11 @@ body {
    margin-bottom: .5rem;
 }
 
-.sign-in-err {
+.sign-in-err, .validationMessage {
    margin-bottom: .5rem;
    color: red;
+   font-size: 14px;
+   /* font-weight: bold; */
    text-align: left;
 }
 

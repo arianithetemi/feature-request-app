@@ -52,7 +52,7 @@ $(document).ready(function() {
        }
    };
 
-   ko.applyBindings(SignInViewModel);
+   ko.applyBindings(SignInViewModel, document.getElementById('sign-in'));
 
    if(localStorage.getItem('token') !== null) {
       $.ajax({
@@ -69,4 +69,5 @@ $(document).ready(function() {
          }
       });
    }
+
 });

@@ -26,27 +26,27 @@
                <form id="sign-up">
                   <h2 class="form-title">Sign up</h2>
                   <div class="form-group">
-                     <input type="text" placeholder="First Name" class="form-control" name="first_name" id="first-name">
+                     <input type="text" placeholder="First Name" data-bind="textInput: firstName" class="form-control" name="first_name" id="first-name">
                   </div>
                   <div class="form-group">
-                     <input type="text" placeholder="Last Name" class="form-control" name="last_name" id="last-name">
+                     <input type="text" placeholder="Last Name" data-bind="textInput: lastName" class="form-control" name="last_name" id="last-name">
                   </div>
                   <div class="form-group">
-                     <input type="text" placeholder="Username" class="form-control" name="username" id="username">
+                     <input type="text" placeholder="Username" data-bind="textInput: username" class="form-control" name="username" id="username">
                   </div>
                   <div class="form-group">
-                     <input type="email" placeholder="Email Address" class="form-control" name="email_address" id="email-address">
+                     <input type="email" placeholder="Email Address" data-bind="textInput: emailAddress" class="form-control" name="email_address" id="email-address">
                   </div>
                   <div class="form-group">
-                     <input type="text" placeholder="Company" class="form-control" name="comapany" id="company">
+                     <input type="text" placeholder="Company" data-bind="textInput: company" class="form-control" name="comapany" id="company">
                   </div>
                   <div class="form-group">
-                     <input type="password" placeholder="Password" class="form-control" name="password" id="sign-up-password">
+                     <input type="password" placeholder="Password" data-bind="textInput: password" class="form-control" name="password" id="sign-up-password">
                   </div>
                   <div class="form-group">
-                     <input type="password" placeholder="Repeat Password" class="form-control" name="confirm-password" id="sign-up-confirm-password">
+                     <input type="password" placeholder="Repeat Password" data-bind="textInput: confirmPassword" class="form-control" name="confirm-password" id="sign-up-confirm-password">
                   </div>
-                  <button type="submit" class="btn btn-block btn-primary">Sign up</button>
+                  <button type="submit" data-bind="click: submit" class="btn btn-block btn-primary">Sign up</button>
                   <button type="button" id="sign-in-btn" class="btn btn-block btn-link">Sign in here</button>
                </form>
             </div>

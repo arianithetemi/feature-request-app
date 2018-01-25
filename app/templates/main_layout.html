@@ -11,7 +11,7 @@
       <script src="{{ url_for('static', filename='js/jquery-3.3.1.js') }}"></script>
       <script>
          $(window).ready(function() {
-            $(".se-pre-con").delay(600).fadeOut('slow');
+            $(".se-pre-con").delay(500).fadeOut('slow');
          });
       </script>
   </head>
@@ -19,11 +19,12 @@
 
       <div class="se-pre-con"></div>
 
-      {% block content %}
-      {% endblock %}
+      {% block content %}{% endblock %}
 
-    <script src="{{ url_for('static', filename='js/bootstrap.min.js') }}"></script>
-    <script src="{{ url_for('static', filename='js/knockout-3.4.2.js') }}"></script>
-    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+      <script src="{{ url_for('static', filename='js/bootstrap.min.js') }}"></script>
+      <script src="{{ url_for('static', filename='js/knockout-3.4.2.js') }}"></script>
+      <script src="{{ url_for('static', filename='js/knockout.validation.min.js') }}"></script>
+      <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+      <script src="{{ url_for('static', filename='js/signup-viewmodel.js') }}"></script>
   </body>
 </html>
