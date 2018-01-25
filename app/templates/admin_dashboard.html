@@ -1,10 +1,74 @@
 {% extends "main_layout.html" %}
 
+{% block header %}
+   <style>
+   body {background-color: #fbfbfb; }
+   /* .admin-nav  } */
+   .border-top { border-top: 1px solid #e5e5e5; }
+   .border-bottom { border-bottom: 1px solid #e5e5e5; }
+   .box-shadow { box-shadow: 0 .25rem .75rem rgba(0, 0, 0, .05); }
+   #v-pills-tab {
+      border: 1px solid #eaeaea;
+      border-bottom: none;
+   }
+   .nav-pills .nav-link {
+      border-radius: 0!important;
+      padding: 13px 20px;
+      border-bottom: 1px solid #eaeaea;
+   }
+   .nav-pills .nav-link.active {
+      font-weight: bold;
+      border-left: 4px solid #095b90;
+      padding-left: 16px;
+   }
+   </style>
+{% endblock %}
+
 {% block content %}
 
+
+
+<div class="d-flex flex-column admin-nav flex-md-row align-items-center p-3 px-md-4 mb-5 bg-white border-bottom box-shadow">
+ <h5 class="my-0 mr-md-auto font-weight-normal">Feature Request App</h5>
+ <h5 class="my-0 mr-md-auto text-center">Admin Dashboard</h5>
+ <nav class="my-2 my-md-0 mr-md-3">
+   <a class="p-2 text-dark">{{ current_user.first_name + ' ' + current_user.last_name }}</a>
+ </nav>
+ <a id="logout" class="btn btn-outline-primary" href="#">Logout</a>
+</div>
+
 <div class="container">
-   <h2>Admin Dashboard</h2>
-   <button id="logout" type="button" class="btn btn-primary">Logout</button>
+
+   <div class="row">
+      <div class="col-md-3">
+         <div class="nav flex-column nav-pills" id="v-pills-tab" role="tablist" aria-orientation="vertical">
+           <a class="nav-link active" data-toggle="pill" href="#overview" role="tab" aria-controls="overview" aria-selected="true">Overview</a>
+
+           <a class="nav-link" data-toggle="pill" href="#feature-requests" role="tab" aria-controls="feature-requests" aria-selected="false">Main Feature Requests</a>
+
+           <a class="nav-link" data-toggle="pill" href="#clients-requests" role="tab" aria-controls="clients-requests" aria-selected="false">Clients Requests</a>
+           <a class="nav-link" data-toggle="pill" href="#manage-clients" role="tab" aria-controls="manage-clients" aria-selected="false">Manage Clients</a>
+           <a class="nav-link" data-toggle="pill" href="#manage-admins" role="tab" aria-controls="manage-admins" aria-selected="false">Manage Admins</a>
+           <a class="nav-link" data-toggle="pill" href="#my-profile" role="tab" aria-controls="my-profile" aria-selected="false">My Profile</a>
+        </div>
+     </div>
+
+      <div class="col-md-9">
+         <div class="tab-content" id="v-pills-tabContent">
+            <div class="tab-pane fade show active" id="overview" role="tabpanel" aria-labelledby="overview">overview</div>
+
+            <div class="tab-pane fade" id="feature-requests" role="tabpanel" aria-labelledby="feature-requests-s">feature-requests</div>
+
+            <div class="tab-pane fade" id="clients-requests" role="tabpanel" aria-labelledby="clients-requests">clients-requests</div>
+
+            <div class="tab-pane fade" id="manage-clients" role="tabpanel" aria-labelledby="manage-clients">manage-clients</div>
+
+            <div class="tab-pane fade" id="manage-admins" role="tabpanel" aria-labelledby="manage-admins">manage-admins</div>
+
+            <div class="tab-pane fade" id="my-profile" role="tabpanel" aria-labelledby="my-profile">my-profile</div>
+         </div>
+      </div>
+   </div>
 </div>
 
 <script>
