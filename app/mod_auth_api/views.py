@@ -34,7 +34,7 @@ def auth():
             token = jwt.encode({'public_id': user.public_id, 'exp': datetime.datetime.utcnow() + datetime.timedelta(minutes=120)}, secret_key)
 
             return jsonify({'message': 'Successfully login', 'token': token.decode('UTF-8'), 'role': user.role.name})
-        return jsonify({'message': 'User is not activated!'})
+        return jsonify({'message': 'Your account is not activated yet!'})
 
     # if password is wrong
     return jsonify({'message': 'Password is invalid!'})

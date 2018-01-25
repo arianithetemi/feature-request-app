@@ -27,7 +27,7 @@ $(document).ready(function() {
                if(result.message == 'Password is invalid!') {
                   $('.sign-in-err').html(result.message);
                }
-               if(result.message == 'User is not activated!') {
+               if(result.message == 'Your account is not activated yet!') {
                   $('.sign-in-err').html(result.message);
                }
                if(result.message == 'Successfully login') {

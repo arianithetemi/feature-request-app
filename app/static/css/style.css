@@ -62,7 +62,7 @@ body {
    margin-bottom: .5rem;
 }
 
-.sign-in-err, .validationMessage {
+.sign-in-err, .validationMessage, .username-err, .match-pass-err {
    margin-bottom: .5rem;
    color: red;
    font-size: 14px;
