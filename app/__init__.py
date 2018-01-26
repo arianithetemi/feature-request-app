@@ -1,16 +1,20 @@
 from flask import Flask
-import os, pymysql
+import os, pymysql, ast
 import ConfigParser
 from logging.handlers import RotatingFileHandler
 from flask_cors import CORS
 from flask_sqlalchemy import SQLAlchemy
 from flask_bcrypt import Bcrypt
+from flask_mail import Mail
 
 # SQLAlchemy
-db = SQLAlchemy();
+db = SQLAlchemy()
 
 # Initialize bcrypt
 bcrypt = Bcrypt()
+
+# Flask Mail
+mail = Mail()
 
 # Generating random 24 chars for secret key
 secret_key = os.urandom(24).encode('hex')
@@ -33,6 +37,9 @@ def create_app():
 
     # Initialize bcrypt
     bcrypt.init_app(app)
+
+    # Initialize Mail
+    mail.init_app(app)
 
     # Init modules
     init_modules(app)
@@ -74,6 +81,13 @@ def load_config(app):
     app.config['SQLALCHEMY_DATABASE_URI'] = sqlalchemy_db_uri
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
     app.config['SECRET_KEY'] = os.urandom(24).encode('hex')
+
+    app.config['MAIL_SERVER'] = config.get('Mail', 'MAIL_SERVER')
+    app.config['MAIL_PORT'] = config.get('Mail', 'MAIL_PORT')
+    app.config['MAIL_USE_SSL'] = ast.literal_eval(config.get('Mail', 'MAIL_USE_SSL'))
+    app.config['MAIL_USE_TLS'] = ast.literal_eval(config.get('Mail', 'MAIL_USE_TLS'))
+    app.config['MAIL_USERNAME'] = config.get('Mail', 'MAIL_USERNAME')
+    app.config['MAIL_PASSWORD'] = config.get('Mail', 'MAIL_PASSWORD')
 
     # Logging path might be relative or starts from the root.
     # If it's relative then be sure to prepend the path with the application's root directory path.

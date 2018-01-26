@@ -2,8 +2,9 @@ import uuid, json, decimal, datetime
 from flask import Blueprint, request, jsonify, Response
 from app.models.user import User
 from app.models.role import Role
-from app import db, bcrypt
+from app import db, bcrypt, mail
 from app.utils.auth import token_required, role_required
+from flask_mail import Message
 
 mod_user_api = Blueprint('user_api', __name__, url_prefix='/api/user')
 
@@ -112,6 +113,13 @@ def activate_user(current_user, public_id):
     # if user not found
     if not user:
         return jsonify({'message': 'No user found!'})
+
+    msg = Message("IWS - Feature Request App - Account Activated",
+                sender=current_user.email_address,
+              recipients=[user.email_address])
+    msg.html = "Hi " + user.first_name + ", <br/><br/> Your account has been successfully activated from IWS Feature Request Staff. <br/><br/> Your username is: <b>" + user.username + "</b><br/>Your password remains the same. <br/><br/> Best Regards, <br/> " + current_user.first_name + " " + current_user.last_name
+
+    mail.send(msg)
 
     # Activating user in db
     user.active = True

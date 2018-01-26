@@ -6,3 +6,4 @@ Flask-Bcrypt==0.7.1
 PyJWT==1.5.3
 pytest==3.3.2
 Flask-Testing==0.7.1
+Flask-Mail==0.9.1
