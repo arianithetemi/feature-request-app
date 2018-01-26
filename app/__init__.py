@@ -73,6 +73,12 @@ def load_config(app):
         server = config.get('SQLAlchemy', 'SQL_HOST')
         db_name = config.get('SQLAlchemy', 'SQL_DB_NAME')
         sqlalchemy_db_uri = 'mysql+pymysql://' + username + ':' + password + '@' + server + '/' + db_name
+        app.config['MAIL_SERVER'] = config.get('Mail', 'MAIL_SERVER')
+        app.config['MAIL_PORT'] = config.get('Mail', 'MAIL_PORT')
+        app.config['MAIL_USE_SSL'] = ast.literal_eval(config.get('Mail', 'MAIL_USE_SSL'))
+        app.config['MAIL_USE_TLS'] = ast.literal_eval(config.get('Mail', 'MAIL_USE_TLS'))
+        app.config['MAIL_USERNAME'] = config.get('Mail', 'MAIL_USERNAME')
+        app.config['MAIL_PASSWORD'] = config.get('Mail', 'MAIL_PASSWORD')
     else:
         config.read(testapp_config_filepath)
         sqlalchemy_db_uri = config.get('SQLAlchemy', 'SQLALCHEMY_DATABASE_URI')
@@ -81,13 +87,6 @@ def load_config(app):
     app.config['SQLALCHEMY_DATABASE_URI'] = sqlalchemy_db_uri
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
     app.config['SECRET_KEY'] = os.urandom(24).encode('hex')
-
-    app.config['MAIL_SERVER'] = config.get('Mail', 'MAIL_SERVER')
-    app.config['MAIL_PORT'] = config.get('Mail', 'MAIL_PORT')
-    app.config['MAIL_USE_SSL'] = ast.literal_eval(config.get('Mail', 'MAIL_USE_SSL'))
-    app.config['MAIL_USE_TLS'] = ast.literal_eval(config.get('Mail', 'MAIL_USE_TLS'))
-    app.config['MAIL_USERNAME'] = config.get('Mail', 'MAIL_USERNAME')
-    app.config['MAIL_PASSWORD'] = config.get('Mail', 'MAIL_PASSWORD')
 
     # Logging path might be relative or starts from the root.
     # If it's relative then be sure to prepend the path with the application's root directory path.
