@@ -13,7 +13,7 @@ mod_user_api = Blueprint('user_api', __name__, url_prefix='/api/user')
 @mod_user_api.route('/', methods=['GET'])
 @token_required
 @role_required('admin')
-def get_users():
+def get_users(current_user):
         # Gell all users from db
         users = User.query.all()
 
@@ -27,6 +27,7 @@ def get_users():
             user_data['username'] = user.username
             user_data['email_address'] = user.email_address
             user_data['role'] = user.role.name
+            user_data['company'] = user.company
             user_data['active'] = user.active
             output.append(user_data)
 

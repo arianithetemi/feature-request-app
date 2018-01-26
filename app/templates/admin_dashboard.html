@@ -12,15 +12,34 @@
       transition: all 0.3s ease;
       box-shadow: 0 2px 24px rgba(0, 0, 0, 0.1);
    }
-   .nav-pills .nav-link {
+   #v-pills-tab .main-link {
       border-radius: 0!important;
       padding: 13px 20px;
       border-bottom: 1px solid #eaeaea;
    }
-   .nav-pills .nav-link.active {
+   #v-pills-tab .main-link.active {
       font-weight: bold;
       border-left: 4px solid #095b90;
       padding-left: 16px;
+   }
+   #manage-clients .nav-item {
+      border-radius: 0!important;
+      background-color: transparent;
+      color: #0093f3;
+      border-bottom: 2px solid #dadada;
+   }
+   #manage-clients .nav-link.active {
+      background-color: transparent;
+      font-weight: bold;
+      color: #0093f3;
+      border-bottom: 2px solid #0093f3;
+   }
+   .title {
+      margin: 24px auto;
+      text-align: center;
+   }
+   .swal-button--confirm {
+     background-color: #007bff;
    }
    </style>
 {% endblock %}
@@ -42,12 +61,12 @@
    <div class="row">
       <div class="col-md-3">
          <div class="nav flex-column nav-pills" id="v-pills-tab" role="tablist" aria-orientation="vertical">
-           <a class="nav-link active" data-toggle="pill" href="#overview" role="tab" aria-controls="overview" aria-selected="true">Overview</a>
-           <a class="nav-link" data-toggle="pill" href="#feature-requests" role="tab" aria-controls="feature-requests" aria-selected="false">Main Feature Requests</a>
-           <a class="nav-link" data-toggle="pill" href="#clients-requests" role="tab" aria-controls="clients-requests" aria-selected="false">Clients Requests</a>
-           <a class="nav-link" data-toggle="pill" href="#manage-clients" role="tab" aria-controls="manage-clients" aria-selected="false">Manage Clients</a>
-           <a class="nav-link" data-toggle="pill" href="#manage-admins" role="tab" aria-controls="manage-admins" aria-selected="false">Manage Admins</a>
-           <a class="nav-link" data-toggle="pill" href="#my-profile" role="tab" aria-controls="my-profile" aria-selected="false">My Profile</a>
+           <a class="nav-link main-link active" data-toggle="pill" href="#overview" role="tab" aria-controls="overview" aria-selected="true">Overview</a>
+           <a class="nav-link main-link" data-toggle="pill" href="#feature-requests" role="tab" aria-controls="feature-requests" aria-selected="false">Main Feature Requests</a>
+           <a class="nav-link main-link" data-toggle="pill" href="#clients-requests" role="tab" aria-controls="clients-requests" aria-selected="false">Clients Requests</a>
+           <a class="nav-link main-link manage-clients-link" data-toggle="pill" href="#manage-clients" role="tab" aria-controls="manage-clients" aria-selected="false">Manage Clients</a>
+           <a class="nav-link main-link" data-toggle="pill" href="#manage-admins" role="tab" aria-controls="manage-admins" aria-selected="false">Manage Admins</a>
+           <a class="nav-link main-link" data-toggle="pill" href="#my-profile" role="tab" aria-controls="my-profile" aria-selected="false">My Profile</a>
         </div></div>
       <div class="col-md-9">
          <div class="tab-content" id="v-pills-tabContent">
@@ -57,11 +76,59 @@
 
             <div class="tab-pane fade" id="clients-requests" role="tabpanel" aria-labelledby="clients-requests">clients-requests</div>
 
-            <div class="tab-pane fade" id="manage-clients" role="tabpanel" aria-labelledby="manage-clients">manage-clients</div>
+            <div class="tab-pane fade" id="manage-clients" role="tabpanel" aria-labelledby="manage-clients">
+               <nav class="nav manage-clients nav-pills nav-justified">
+                 <a class="nav-item nav-link pending-clients-link active" data-toggle="pill" role="tab" href="#pending-clients">Pending Clients</a>
+                 <a class="nav-item nav-link active-clients-link" data-toggle="pill" role="tab" href="#active-clients">Active Clients</a>
+               </nav>
+
+               <div class="tab-content">
+                  <div class="tab-pane fade show active" id="pending-clients" role="tabpanel" aria-labelledby="manage-admins">
+                     <h4 class="title">Pending Clients Table</h4>
+                     <div class="table-responsive">
+                        <table class="table table-hover">
+                          <thead>
+                            <tr>
+                              <th scope="col">First Name</th>
+                              <th scope="col">Last Name</th>
+                              <th scope="col">Username</th>
+                              <th scope="col">Email Address</th>
+                              <th scope="col">Company</th>
+                              <th scope="col">Action</th>
+                            </tr>
+                          </thead>
+                          <tbody class="pending-clients-table">
+                          </tbody>
+                        </table>
+                     </div>
+                  </div>
+
+                  <div class="tab-pane fade" id="active-clients" role="tabpanel" aria-labelledby="active-admins">
+                     <div class="table-responsive">
+                        <h4 class="title">Active Clients Table</h4>
+                        <table class="table table-hover mt-4">
+                          <thead>
+                            <tr>
+                              <th scope="col">First Name</th>
+                              <th scope="col">Last Name</th>
+                              <th scope="col">Username</th>
+                              <th scope="col">Email Address</th>
+                              <th scope="col">Company</th>
+                            </tr>
+                          </thead>
+                          <tbody class="active-clients-table">
+                          </tbody>
+                        </table>
+                     </div>
+                  </div>
+               </div>
+
+            </div>
 
             <div class="tab-pane fade" id="manage-admins" role="tabpanel" aria-labelledby="manage-admins">manage-admins</div>
 
             <div class="tab-pane fade" id="my-profile" role="tabpanel" aria-labelledby="my-profile">my-profile</div>
+
          </div>
       </div>
    </div>
@@ -74,6 +141,87 @@
          localStorage.removeItem('token');
          window.location.href = '/';
       });
+
+      // Populating Pending Clients Table
+      $('.manage-clients-link, .pending-clients-link').click(function() {
+         $('.pending-clients-table').html("");
+         $.ajax({
+            url: '/api/user/',
+            method: 'GET',
+            contentType: 'application/json',
+            headers: {"x-access-token": localStorage.getItem('token')},
+            success: function(res) {
+               res.map(user => {
+                  if (user.role != 'admin' && user.active == false) {
+                     $('.pending-clients-table').append("<tr>\
+                     <td>"+ user.first_name +"</td>\
+                     <td>"+ user.last_name +"</td>\
+                     <td>"+ user.username +"</td>\
+                     <td>"+ user.email_address +"</td>\
+                     <td>"+ user.company +"</td>\
+                     <td><button type='button' id='approve-client' data-publicId="+user.public_id+" class='btn btn-info btn-sm'>Approve</button></td>\
+                     </tr>");
+                  }
+               });
+            }
+         });
+      });
+
+      // Populating Active Clients Table
+      $('.active-clients-link').click(function() {
+         $('.active-clients-table').html("");
+         $.ajax({
+            url: '/api/user/',
+            method: 'GET',
+            contentType: 'application/json',
+            headers: {"x-access-token": localStorage.getItem('token')},
+            success: function(res) {
+               res.map(user => {
+                  if (user.role != 'admin' && user.active == true) {
+                     $('.active-clients-table').append("<tr>\
+                     <td>"+ user.first_name +"</td>\
+                     <td>"+ user.last_name +"</td>\
+                     <td>"+ user.username +"</td>\
+                     <td>"+ user.email_address +"</td>\
+                     <td>"+ user.company +"</td>\
+                     </tr>");
+                  }
+               });
+            }
+         });
+      });
+
+      $(document).on("click", "#approve-client", function(){
+         var userPublicId = $(this).attr('data-publicId');
+
+         swal({
+           title: "Are you sure?",
+           text: "You want to approve as active this client!",
+           icon: "info",
+           buttons: true,
+           // dangerMode: true,
+         })
+         .then(willApprove => {
+           if (willApprove) {
+             $(this).parent().parent().remove();
+             $.ajax({
+               url: "/api/user/activate/"+userPublicId,
+               method: "PUT",
+               contentType: 'application/json',
+               headers: {"x-access-token": localStorage.getItem('token')},
+               success: function(res) {
+                  if(res.message == "The user has been activated!") {
+                     swal("Success!", "This client is approved!", "success")
+                  }
+               }
+             })
+
+           } else {
+             return false;
+           }
+         });
+      });
+
    // });
 </script>
 {% endblock %}
