@@ -11,6 +11,6 @@ def index():
 @token_required
 def dashboard(current_user):
     if current_user.role.name == 'client':
-        return render_template('client_dashboard.html')
+        return render_template('client_dashboard.html', current_user=current_user)
     else:
         return render_template('admin_dashboard.html', current_user=current_user)

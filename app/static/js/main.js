@@ -40,10 +40,11 @@ $(document).ready(function() {
                     type: 'GET',
                     headers: {"x-access-token": localStorage.getItem('token')},
                     success: function(data) {
-                       document.write(data);
-                       $.ajaxSetup({
-                         headers: {"x-access-token": localStorage.getItem('token')}
-                       });
+                      if (typeof data == 'string') {
+                        setTimeout(function() {
+                          document.write(data);
+                        }, 500);
+                      }
                     }
                   });
                }
@@ -51,7 +52,6 @@ $(document).ready(function() {
           });
        }
    };
-
    ko.applyBindings(SignInViewModel, document.getElementById('sign-in'));
 
    if(localStorage.getItem('token') !== null) {
@@ -61,7 +61,13 @@ $(document).ready(function() {
          headers: {"x-access-token": localStorage.getItem('token')},
          success: function(data) {
             if (typeof data == 'string') {
-               document.write(data);
+              setTimeout(function() {
+                document.write(data);
+              }, 500);
+
+               setTimeout(function(){
+                 window.stop();
+               }, 1800);
             } else {
                localStorage.removeItem('token');
                window.location.href = '/';
