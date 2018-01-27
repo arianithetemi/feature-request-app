@@ -72,6 +72,7 @@ var signUpAdminViewModel = {
                   swal("Success!", "Admin has been successfully saved!", "success")
                      .then(function() {
                         $('#add-admin').modal('hide');
+                        $('#admin-form').trigger('reset');
                         $('.admin-table').append("<tr>\
                            <td>"+ jsonData.first_name +"</td>\
                            <td>"+ jsonData.last_name +"</td>\

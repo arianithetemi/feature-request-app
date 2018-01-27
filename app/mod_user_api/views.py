@@ -105,7 +105,7 @@ def add_admin(current_user):
     user = User(public_id=str(uuid.uuid4()), first_name=data['first_name'], last_name=data['last_name'], username=data['username'], company=data['company'], active=True, email_address=data['email_address'], password=hash_password)
 
     # Creating instance of role and set to this user
-    role = Role(name='admin', description="Administrator to manage clients, feature requests and message to client.", user=user)
+    role = Role(name='admin', description="Administrator to manage clients, feature requests and message to clients.", user=user)
 
     # Executing queries
     db.session.add(user)
@@ -142,7 +142,9 @@ def get_user(current_user, public_id):
     # returning user_data in json
     return jsonify({'user': user_data})
 
-''' Activating User Endpoint - Token is required '''
+'''
+    Activating User Endpoint - Token is required
+'''
 @mod_user_api.route('/activate/<public_id>', methods=['PUT'])
 @token_required
 @role_required('admin')
@@ -224,7 +226,7 @@ def change_user_password(current_user, public_id):
 
     # Checking password
     if not bcrypt.check_password_hash(user.password, data['current_password']):
-        return jsonify({'message': 'Password is invalid!'})
+        return jsonify({'message': 'Current password is invalid!'})
 
     # Checking new password and confirm new password
     if data['new_password'] != data['confirm_new_password']:
@@ -237,7 +239,6 @@ def change_user_password(current_user, public_id):
     db.session.commit()
 
     return jsonify({'message': 'Password successfully changed!'})
-
 
 '''
     Delete User Endpoint - Token is required

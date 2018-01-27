@@ -78,7 +78,6 @@ $('#edit-profile-link').click(function() {
       };
 
       updateProfileViewModel.errors = ko.validation.group(updateProfileViewModel);
-
       updateProfileViewModel.requireLocation = function() {
          updateProfileViewModel.location.extend({required: true});
       };
@@ -88,6 +87,65 @@ $('#edit-profile-link').click(function() {
   });
 });
 
+
+// Changing Password ViewModel
 var mustEqual = function(val, other) {
    return val == other;
 };
+
+var updatePasswordViewModel = {
+   currentPassword: ko.observable("").extend({required: true}),
+   newPassword: ko.observable("").extend({required: true}),
+   confirmNewPassword: ko.observable("").extend({required: true}),
+   submit: function() {
+      if (updatePasswordViewModel.errors().length === 0) {
+         var jsonData = {
+            current_password: this.currentPassword(),
+            new_password: this.newPassword(),
+            confirm_new_password: this.confirmNewPassword()
+         };
+
+         $.ajax({
+            method: 'PUT',
+            url: '/api/user/change-password/'+publicId,
+            contentType: 'application/json',
+            dataType: 'json',
+            data: JSON.stringify(jsonData),
+            headers: {"x-access-token": localStorage.getItem('token')},
+            success: function(data) {
+              if (data.message == "Current password is invalid!") {
+                $('.pass-err').html(data.message);
+              } else {
+                swal("Success!", "Password updated successfully", "success")
+                  .then(function() {
+                    $('#change-password-modal').modal('hide');
+                    $('#change-password-form').find("input[type=password]").val("");
+                  });
+              }
+            }
+         });
+      }
+      else {
+         updatePasswordViewModel.errors.showAllMessages();
+      }
+   }
+};
+
+$('#current-password').keyup(function() {
+   $('.pass-err').html('');
+});
+
+updatePasswordViewModel.confirmNewPassword = ko.observable().extend({
+   validation: {
+      validator: mustEqual,
+      message: 'Passwords do not match.',
+      params: updatePasswordViewModel.newPassword
+   }
+});
+
+updatePasswordViewModel.errors = ko.validation.group(updatePasswordViewModel);
+updatePasswordViewModel.requireLocation = function() {
+   updatePasswordViewModel.location.extend({required: true});
+};
+
+ko.applyBindings(updatePasswordViewModel, document.getElementById('change-password-form'));
