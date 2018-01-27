@@ -19,15 +19,16 @@ mail = Mail()
 # Generating random 24 chars for secret key
 secret_key = os.urandom(24).encode('hex')
 
-def create_app():
-    # Here we  create flask instance
+# When creating instance of flask app we need to pass the config_type(dev_pro or test)
+def create_app(config_type):
+    # Here we create flask instance
     app = Flask(__name__)
 
     # Allow cross-domain access to API.
-    #cors = CORS(app, resources={r"/api/*": {"origins": "*"}})
+    # cors = CORS(app, resources={r"/api/*": {"origins": "*"}})
 
-    # Load application configurations
-    load_config(app)
+    # Load application configurations based on the type of config type passed in create_app
+    load_config(app, config_type)
 
     # Configure logging.
     configure_logging(app)
@@ -47,10 +48,11 @@ def create_app():
     return app
 
 
-def load_config(app):
+def load_config(app, config_type):
     ''' Reads the config file and loads configuration properties into the Flask app.
     :param app: The Flask app object.
     '''
+
     # Get the path to the application directory, that's where the config file resides.
     par_dir = os.path.join(__file__, os.pardir)
     par_dir_abs_path = os.path.abspath(par_dir)
@@ -65,7 +67,8 @@ def load_config(app):
     testapp_config_filepath = app_dir + '/test_app_config.cfg'
 
     # Checking if config.cfg file exists and read from it, if not read from test config
-    if os.path.isfile(config_filepath):
+    # if os.path.isfile(config_filepath):
+    if config_type == 'dev_pro':
         config.read(config_filepath)
         # Getting DB Config
         username = config.get('SQLAlchemy', 'SQL_USERNAME')

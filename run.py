@@ -3,7 +3,7 @@ import argparse
 from app import create_app
 
 # Create the flask app.
-app = create_app()
+app = create_app('dev_pro')
 
 # Run the app
 if __name__ == '__main__':

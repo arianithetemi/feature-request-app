@@ -9,7 +9,7 @@ class BaseTestCase(TestCase):
     ############################
 
     def create_app(self):
-        return create_app()
+        return create_app('testing')
 
     # executed prior to each test
     def setUp(self):
