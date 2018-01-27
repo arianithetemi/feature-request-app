@@ -50,7 +50,7 @@ def get_users(current_user):
         return Response(response=json.dumps(output), status=200, mimetype="application/json")
 
 '''
-    Creating New User Endpoint
+    Creating New Client User Endpoint
 '''
 @mod_user_api.route('/add', methods=['POST'])
 def add_user():
@@ -70,15 +70,8 @@ def add_user():
     # Creating instance of new user with json data values
     user = User(public_id=str(uuid.uuid4()), first_name=data['first_name'], last_name=data['last_name'], username=data['username'], company=data['company'], active=False, email_address=data['email_address'], password=hash_password)
 
-    # Setting description of the role
-    description = ''
-    if data['role'] == 'admin':
-        description = "Administrator to manage clients, feature requests and message to client."
-    else:
-        description = "Client can send feature requests and start send messages."
-
     # Creating instance of role and set to this user
-    role = Role(name=data['role'], description=description, user=user)
+    role = Role(name='client', description="Client can send feature requests and start send messages.", user=user)
 
     # Executing queries
     db.session.add(user)
@@ -87,6 +80,40 @@ def add_user():
 
     # Returning message in json
     return jsonify({'message': 'Successfully user created!', 'status': 'inactive'})
+
+'''
+    Creating New Admin User Endpoint
+'''
+@mod_user_api.route('/add/admin', methods=['POST'])
+@token_required
+@role_required('admin')
+def add_admin(current_user):
+    # Getting json data from request
+    data = request.get_json()
+
+    if db.session.query(User).filter_by(username=data['username']).count():
+        return jsonify({'message': 'Username is taken!'})
+
+    # Checking password with confirm password
+    if data['password'] != data['confirm_password']:
+        return jsonify({'message': 'Password and Confirm Password do not match!'})
+
+    # Hashing password
+    hash_password = bcrypt.generate_password_hash(data['password'])
+
+    # Creating instance of new user with json data values
+    user = User(public_id=str(uuid.uuid4()), first_name=data['first_name'], last_name=data['last_name'], username=data['username'], company=data['company'], active=True, email_address=data['email_address'], password=hash_password)
+
+    # Creating instance of role and set to this user
+    role = Role(name='admin', description="Administrator to manage clients, feature requests and message to client.", user=user)
+
+    # Executing queries
+    db.session.add(user)
+    db.session.add(role)
+    db.session.commit()
+
+    # Returning message in json
+    return jsonify({'message': 'Successfully admin user created!', 'status': 'active'})
 
 '''
     Get One User Endpoint - Token is required

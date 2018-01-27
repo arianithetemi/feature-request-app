@@ -31,8 +31,7 @@ $(document).ready(function() {
                email_address: this.emailAddress(),
                company: this.company(),
                password: this.password(),
-               confirm_password: this.confirmPassword(),
-               role: "client"
+               confirm_password: this.confirmPassword()
             };
 
             $.ajax({

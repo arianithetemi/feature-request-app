@@ -41,6 +41,18 @@
    .swal-button--confirm {
      background-color: #007bff;
    }
+   .form-control:focus {
+     /* border-color: #FF0000; */
+     border-width: 1px;
+     box-shadow: none;
+   }
+   .sign-in-err, .validationMessage, .username-err, .match-pass-err {
+      margin-bottom: .5rem;
+      color: red;
+      font-size: 14px;
+      /* font-weight: bold; */
+      text-align: left;
+   }
    </style>
 {% endblock %}
 
@@ -65,23 +77,28 @@
            <a class="nav-link main-link" data-toggle="pill" href="#feature-requests" role="tab" aria-controls="feature-requests" aria-selected="false">Main Feature Requests</a>
            <a class="nav-link main-link" data-toggle="pill" href="#clients-requests" role="tab" aria-controls="clients-requests" aria-selected="false">Clients Requests</a>
            <a class="nav-link main-link manage-clients-link" data-toggle="pill" href="#manage-clients" role="tab" aria-controls="manage-clients" aria-selected="false">Manage Clients</a>
-           <a class="nav-link main-link" data-toggle="pill" href="#manage-admins" role="tab" aria-controls="manage-admins" aria-selected="false">Manage Admins</a>
+           <a class="nav-link main-link manage-admins-link" data-toggle="pill" href="#manage-admins" role="tab" aria-controls="manage-admins" aria-selected="false">Manage Admins</a>
            <a class="nav-link main-link" data-toggle="pill" href="#my-profile" role="tab" aria-controls="my-profile" aria-selected="false">My Profile</a>
-        </div></div>
+        </div>
+     </div>
+
       <div class="col-md-9">
          <div class="tab-content" id="v-pills-tabContent">
+            <!-- Overview Panel  -->
             <div class="tab-pane fade show active" id="overview" role="tabpanel" aria-labelledby="overview">overview</div>
 
+            <!-- Feature Requests -->
             <div class="tab-pane fade" id="feature-requests" role="tabpanel" aria-labelledby="feature-requests-s">feature-requests</div>
 
+            <!-- Clients Requests -->
             <div class="tab-pane fade" id="clients-requests" role="tabpanel" aria-labelledby="clients-requests">clients-requests</div>
 
+            <!-- Manage Clients -->
             <div class="tab-pane fade" id="manage-clients" role="tabpanel" aria-labelledby="manage-clients">
                <nav class="nav manage-clients nav-pills nav-justified">
                  <a class="nav-item nav-link pending-clients-link active" data-toggle="pill" role="tab" href="#pending-clients">Pending Clients</a>
                  <a class="nav-item nav-link active-clients-link" data-toggle="pill" role="tab" href="#active-clients">Active Clients</a>
                </nav>
-
                <div class="tab-content">
                   <div class="tab-pane fade show active" id="pending-clients" role="tabpanel" aria-labelledby="manage-admins">
                      <h4 class="title pending-clients-title">Pending Clients Table</h4>
@@ -121,122 +138,96 @@
                      </div>
                   </div>
                </div>
-
             </div>
 
-            <div class="tab-pane fade" id="manage-admins" role="tabpanel" aria-labelledby="manage-admins">manage-admins</div>
+            <!-- Manage Admins -->
+            <div class="tab-pane fade" id="manage-admins" role="tabpanel" aria-labelledby="manage-admins">
+               <div class="row">
+                  <div class="col-md-10">
+                     <h4 class="title">Manage Admins</h4>
+                  </div>
+                  <div class="col-md-2">
+                     <button type="button" data-toggle="modal" data-target="#add-admin" class="btn text-right title btn-dark btn-sm">Add Admin</button>
+                     <!-- Modal -->
+                     <div class="modal fade" id="add-admin" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                       <div class="modal-dialog" role="document">
+                         <div class="modal-content">
+                           <div class="modal-header">
+                             <h5 class="modal-title" id="exampleModalLabel">Add New Admin</h5>
+                             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                               <span aria-hidden="true">&times;</span>
+                             </button>
+                           </div>
+                           <div class="modal-body">
+                              <form id="admin-form">
+                                 <div class="form-group">
+                                    <input type="text" placeholder="First Name" data-bind="textInput: firstName" class="form-control" id="first-name">
+                                 </div>
+                                 <div class="form-group">
+                                    <input type="text" placeholder="Last Name" data-bind="textInput: lastName" class="form-control" id="last-name">
+                                 </div>
+                                 <div class="form-group">
+                                    <input type="text" placeholder="Username" data-bind="textInput: username" class="form-control" id="username-admin">
+                                    <div class="username-err"></div>
+                                 </div>
+                                 <div class="form-group">
+                                    <input type="email" placeholder="Email Address" data-bind="textInput: emailAddress" class="form-control" id="email-address">
+                                 </div>
+                                 <div class="form-group">
+                                    <input type="text" placeholder="Company" data-bind="textInput: company" class="form-control" id="company">
+                                 </div>
+                                 <div class="form-group">
+                                    <input type="password" placeholder="Password" data-bind="textInput: password" class="form-control" id="sign-up-password">
+                                 </div>
+                                 <div class="form-group">
+                                    <input type="password" placeholder="Repeat Password" data-bind="textInput: confirmPassword" class="form-control" id="sign-up-confirm-password">
+                                    <div class="match-pass-err"></div>
+                                 </div>
+                                 <div class="modal-footer" style="padding: 10px 0 0 0;">
+                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                                    <button type="submit" data-bind="click: submit" class="btn btn-primary">Submit</button>
+                                 </div>
+                              </form>
+                           </div>
+                         </div>
+                       </div>
+                     </div>
+                  </div>
+               </div>
+               <!-- Admin Table -->
+               <div class="table-responsive">
+                  <table class="table table-hover">
+                    <thead>
+                      <tr>
+                        <th scope="col">First Name</th>
+                        <th scope="col">Last Name</th>
+                        <th scope="col">Username</th>
+                        <th scope="col">Email Address</th>
+                        <th scope="col">Company</th>
+                      </tr>
+                    </thead>
+                    <tbody class="admin-table">
+                    </tbody>
+                  </table>
+               </div>
+            </div>
 
-            <div class="tab-pane fade" id="my-profile" role="tabpanel" aria-labelledby="my-profile">my-profile</div>
+            <!-- Profile -->
+            <div class="tab-pane fade" id="my-profile" role="tabpanel" aria-labelledby="my-profile">
 
+            </div>
          </div>
       </div>
    </div>
 </div>
 
-<script>
-   // $(document).ready(function() {
+   <script>
       // $(".se-pre-con").delay(3000).fadeOut('slow');
       $('#logout').click(function() {
-         localStorage.removeItem('token');
-         window.location.href = '/';
-      });
-
-      // Populating Pending Clients Table
-      $('.manage-clients-link, .pending-clients-link').click(function() {
-         $('.pending-clients-table').html("");
-         $.ajax({
-            url: '/api/user/',
-            method: 'GET',
-            contentType: 'application/json',
-            data: { role: 'client', status: 'False' },
-            headers: {"x-access-token": localStorage.getItem('token')},
-            success: function(res) {
-               if (res != '') {
-                  $('.pending-clients-title').html("Pending Clients Table");
-                  $('.pending-clients-table').parent().show();
-                  res.map(client => {
-                     $('.pending-clients-table').append("<tr>\
-                     <td>"+ client.first_name +"</td>\
-                     <td>"+ client.last_name +"</td>\
-                     <td>"+ client.username +"</td>\
-                     <td>"+ client.email_address +"</td>\
-                     <td>"+ client.company +"</td>\
-                     <td><button type='button' id='approve-client' data-publicId="+client.public_id+" class='btn btn-info btn-sm'>Approve</button></td>\
-                     </tr>");
-                  });
-               } else {
-                  $('.pending-clients-title').html("No Pending Clients");
-                  $('.pending-clients-table').parent().hide();
-               }
-            }
+            localStorage.removeItem('token');
+            window.location.href = '/';
          });
-      });
-
-      // Populating Active Clients Table
-      $('.active-clients-link').click(function() {
-         $('.active-clients-table').html("");
-         $.ajax({
-            url: '/api/user/',
-            method: 'GET',
-            contentType: 'application/json',
-            data: { role: 'client', status: 'True' },
-            headers: {"x-access-token": localStorage.getItem('token')},
-            success: function(res) {
-               if (res != '') {
-                  $('.active-clients-title').html("Active Clients Table");
-                  $('.active-clients-table').parent().show();
-                  res.map(user => {
-                     $('.active-clients-table').append("<tr>\
-                     <td>"+ user.first_name +"</td>\
-                     <td>"+ user.last_name +"</td>\
-                     <td>"+ user.username +"</td>\
-                     <td>"+ user.email_address +"</td>\
-                     <td>"+ user.company +"</td>\
-                     </tr>");
-                  });
-               } else {
-                  $('.active-clients-title').html("No Active Clients");
-                  $('.active-clients-table').parent().hide();
-               }
-            }
-         });
-      });
-
-      $(document).on("click", "#approve-client", function(){
-         var userPublicId = $(this).attr('data-publicId');
-
-         swal({
-           title: "Are you sure?",
-           text: "You want to approve as active this client!",
-           icon: "info",
-           buttons: true
-         })
-         .then(willApprove => {
-           if (willApprove) {
-             $(this).parent().parent().remove();
-             var countRows = $('.pending-clients-table tr').length;
-             if (countRows == 0) {
-               $('.pending-clients-title').html("No Pending Clients");
-               $('.pending-clients-table').parent().hide();
-             }
-             $.ajax({
-               url: "/api/user/activate/"+userPublicId,
-               method: "PUT",
-               contentType: 'application/json',
-               headers: {"x-access-token": localStorage.getItem('token')},
-               success: function(res) {
-                  if(res.message == "The user has been activated!") {
-                     swal("Success!", "This client is approved!", "success")
-                  }
-               }
-             })
-
-           } else {
-             return false;
-           }
-         });
-      });
-
-   // });
-</script>
+   </script>
+   <script src="{{ url_for('static', filename='js/manage-clients.js') }}"></script>
+   <script src="{{ url_for('static', filename='js/manage-admins.js') }}"></script>
 {% endblock %}

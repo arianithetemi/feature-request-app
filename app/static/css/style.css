@@ -52,11 +52,6 @@ body {
   box-shadow: none;
 }
 
-/* .btn-block:focus, .btn-block:active, btn-block:visited {
-   border: none!important;
-   outline: none!important;
-} */
-
 .password-cont {
    margin-bottom: .5rem;
 }
