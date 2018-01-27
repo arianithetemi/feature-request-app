@@ -15,8 +15,21 @@ mod_user_api = Blueprint('user_api', __name__, url_prefix='/api/user')
 @token_required
 @role_required('admin')
 def get_users(current_user):
-        # Gell all users from db
-        users = User.query.all()
+
+        role = request.args.get('role')
+        status = request.args.get('status')
+
+        if status == 'True':
+            final_status = True
+        elif status == 'False':
+            final_status = False
+        else:
+            final_status = None
+
+        if role != None and final_status != None:
+            users = User.query.filter_by(active=final_status).join(User.role).filter(Role.name.contains(role)).all()
+        else:
+            users = User.query.all()
 
         # Building JSON for each user and append to array
         output = []
