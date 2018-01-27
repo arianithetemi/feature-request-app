@@ -1,19 +1,257 @@
 {% extends "main_layout.html" %}
 
+{% block header %}
+   <style>
+     body {background-color: #fbfbfb; }
+     .border-top { border-top: 1px solid #e5e5e5; }
+     .border-bottom { border-bottom: 1px solid #e5e5e5; }
+     .box-shadow { box-shadow: 0 .25rem .75rem rgba(0, 0, 0, .05); }
+     #v-pills-tab {
+        border: 1px solid rgba(0,0,0,.125);
+        border-bottom: none;
+        transition: all 0.3s ease;
+        border-radius: 4px;
+        /* box-shadow: 0 2px 24px rgba(0, 0, 0, 0.1); */
+     }
+     #v-pills-tab .main-link {
+        border-radius: 0!important;
+        padding: 13px 20px;
+        border-bottom: 1px solid #eaeaea;
+     }
+     #v-pills-tab .main-link.active {
+        font-weight: bold;
+        border-left: 4px solid #095b90;
+        padding-left: 16px;
+        border-bottom: none!important;
+     }
+     #manage-clients .nav-item {
+        border-radius: 0!important;
+        background-color: transparent;
+        color: #0093f3;
+        border-bottom: 2px solid #dadada;
+     }
+     #manage-clients .nav-link.active {
+        background-color: transparent;
+        font-weight: bold;
+        color: #0093f3;
+        border-bottom: 2px solid #0093f3;
+     }
+     .btn-primary, .btn-outline-primary:hover, .nav-pills .nav-link.active {
+       background-color: #1d8cde!important;
+       /* border-color: #1d8cde!important; */
+     }
+     .btn-outline-primary {
+       border-color: #1d8cde!important;
+     }
+     .title {
+        margin: 24px auto;
+        text-align: center;
+     }
+     .swal-button--confirm {
+       background-color: #007bff;
+     }
+     .form-control:focus {
+       /* border-color: #FF0000; */
+       border-width: 1px;
+       box-shadow: none;
+     }
+     .sign-in-err, .validationMessage, .username-err, .match-pass-err, .pass-err {
+        margin-bottom: .5rem;
+        color: red;
+        font-size: 14px;
+        text-align: left;
+     }
+     @media (min-width: 768px) {
+      .dl-horizontal dt {
+        float: left;
+        width: 160px;
+        clear: left;
+        text-align: right;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+      .dl-horizontal dd {
+        margin-left: 180px;
+      }
+    }
+    .dl-horizontal dt {
+        float: left;
+        width: 160px;
+        clear: left;
+        font-size: 18px;
+        text-align: right;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+      .dl-horizontal dd {
+        margin-left: 180px;
+        font-size: 18px;
+      }
+      .client-jumbotron {
+        padding: 30px;
+        background-color: #e9ecef9e;
+      }
+   </style>
+{% endblock %}
+
 {% block content %}
 
-<div class="container">
-   <h2>Client Dashboard</h2>
-   <button id="logout" type="button" class="btn btn-primary">Logout</button>
+<div class="d-flex flex-column admin-nav flex-md-row align-items-center p-3 px-md-4 mb-5 bg-white border-bottom box-shadow">
+ <h5 class="my-0 mr-md-auto font-weight-normal">IWS Feature Request App</h5>
+ <h5 class="my-0 mr-md-auto text-center">Dashboard</h5>
+ <nav class="my-2 my-md-0 mr-md-3">
+   <a class="p-2 text-dark">{{ current_user.first_name + ' ' + current_user.last_name }}</a>
+ </nav>
+ <a id="logout" class="btn btn-outline-primary" href="#">Logout</a>
 </div>
 
-<script>
-   $(document).ready(function() {
-      $('#logout').click(function() {
-         localStorage.removeItem('token');
-         window.location.href = '/';
-      });
-   });
-</script>
+<div class="container">
+   <div class="row">
+      <div class="col-md-3">
+         <!-- Admin Menu -->
+         <div class="nav flex-column nav-pills" id="v-pills-tab" role="tablist" aria-orientation="vertical">
+           <a class="nav-link main-link active" data-toggle="pill" href="#home" role="tab" aria-controls="home" aria-selected="true">Home</a>
 
+           <a class="nav-link main-link" data-toggle="pill" href="#feature-requests" role="tab" aria-controls="feature-requests" aria-selected="false">Feature Requests</a>
+
+           <a data-publicId="{{ current_user.public_id }}" class="nav-link main-link profile-link" data-toggle="pill" href="#profile" role="tab" aria-controls="profile" aria-selected="false">Profile</a>
+        </div>
+     </div>
+
+      <div class="col-md-9">
+         <div class="tab-content" id="v-pills-tabContent">
+            <!-- Overview Panel  -->
+            <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home">
+
+              <div class="jumbotron client-jumbotron">
+                <h3>Hello, {{ current_user.first_name }}!</h3>
+                <hr class="my-4">
+                <p class="lead">Welcome to IWS Feature Request App. As an offical approved client on IWS platform, now you have the right to send your feature requests using this application.<br /><br /> Navigate to <b>Feature Requests</b> on the left menu to add new feature requests.
+                Along with the requests you can send correspondence messages when IWS employees respond to your requests.</p>
+              </div>
+            </div>
+
+            <!-- Feature Requests -->
+            <div class="tab-pane fade" id="feature-requests" role="tabpanel" aria-labelledby="feature-requests-s">Feature Requests</div>
+
+            <!-- Profile -->
+            <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile">
+              <h4 style="margin-bottom: 0px" class="title">Profile</h4>
+              <hr/>
+              <div class="col-md-8 offset-md-3">
+                <dl class="dl-horizontal">
+                  <dt>First Name:</dt>
+                  <dd id="p-first-name"></dd>
+                </dl>
+                <dl class="dl-horizontal">
+                  <dt>Last Name:</dt>
+                  <dd id="p-last-name"></dd>
+                </dl>
+                <dl class="dl-horizontal">
+                  <dt>Username:</dt>
+                  <dd id="p-username"></dd>
+                </dl>
+                <dl class="dl-horizontal">
+                  <dt>Email Address:</dt>
+                  <dd id="p-email"></dd>
+                </dl>
+                <dl class="dl-horizontal">
+                  <dt>Company:</dt>
+                  <dd id="p-company"></dd>
+                </dl>
+              </div>
+              <div class="col-md-6 offset-md-3">
+                <button type="button" id="edit-profile-link" data-toggle="modal" data-target="#edit-profile-modal" class="btn btn-sm btn-block btn-primary">Edit Profile</button>
+                <button type="button" data-toggle="modal" data-target="#change-password-modal" class="btn btn-sm btn-block btn-secondary">Change Password</button>
+              </div>
+
+              <!-- Edit Profile Modal -->
+              <div class="modal fade" id="edit-profile-modal" tabindex="-1" role="dialog" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                  <div class="modal-content">
+                    <div class="modal-header">
+                      <h5 class="modal-title" id="exampleModalLabel">Edit Profile</h5>
+                      <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                      </button>
+                    </div>
+                    <div class="modal-body">
+                       <form id="edit-profile">
+                          <div class="form-group">
+                            <label for="firstName-input">First Name: </label>
+                            <input type="text" data-bind="textInput: firstName" class="form-control" id="firstName-input">
+                          </div>
+                          <div class="form-group">
+                            <label for="lastName-input">Last Name: </label>
+                             <input type="text" data-bind="textInput: lastName" class="form-control" id="lastName-input">
+                          </div>
+                          <div class="form-group">
+                            <label for="emailAddress-input">Email Address: </label>
+                             <input type="email" data-bind="textInput: emailAddress" id="emailAddress-input" class="form-control">
+                          </div>
+                          <div class="form-group">
+                            <label for="company-input">Company: </label>
+                             <input type="text" data-bind="textInput: company" class="form-control" id="company-input">
+                          </div>
+                          <div class="modal-footer" style="padding: 10px 0 0 0;">
+                             <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                             <button type="submit" data-bind="click: submit" class="btn btn-primary">Update Profile</button>
+                          </div>
+                       </form>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Change Password Modal -->
+              <div class="modal fade" id="change-password-modal" tabindex="-1" role="dialog" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                  <div class="modal-content">
+                    <div class="modal-header">
+                      <h5 class="modal-title" id="exampleModalLabel">Change Password</h5>
+                      <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                      </button>
+                    </div>
+                    <div class="modal-body">
+                       <form id="change-password-form">
+                          <div class="form-group">
+                            <label for="firstName-input">Current Password: </label>
+                            <input id="current-password" type="password" data-bind="textInput: currentPassword" class="form-control">
+                            <div class="pass-err"></div>
+                          </div>
+                          <div class="form-group">
+                            <label for="lastName-input">New Password: </label>
+                             <input type="password" data-bind="textInput: newPassword" class="form-control">
+                          </div>
+                          <div class="form-group">
+                            <label>Repeat New Password: </label>
+                             <input type="password" data-bind="textInput: confirmNewPassword" class="form-control">
+                          </div>
+                          <div class="modal-footer" style="padding: 10px 0 0 0;">
+                             <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                             <button type="submit" data-bind="click: submit" class="btn btn-primary">Update Password</button>
+                          </div>
+                       </form>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+         </div>
+      </div>
+   </div>
+</div>
+
+   <script>
+      // $(".se-pre-con").delay(3000).fadeOut('slow');
+      $('#logout').click(function() {
+            localStorage.removeItem('token');
+            window.location.href = '/';
+         });
+   </script>
+   <script src="{{ url_for('static', filename='js/manage-clients.js') }}"></script>
+   <script src="{{ url_for('static', filename='js/profile.js') }}"></script>
 {% endblock %}
