@@ -120,7 +120,6 @@ def add_admin(current_user):
 '''
 @mod_user_api.route('/<public_id>', methods=['GET'])
 @token_required
-@role_required('admin')
 def get_user(current_user, public_id):
     # query user in db by public_id
     user = User.query.filter_by(public_id=public_id).first()
@@ -137,6 +136,7 @@ def get_user(current_user, public_id):
     user_data['username'] = user.username
     user_data['email_address'] = user.email_address
     user_data['role'] = user.role.name
+    user_data['company'] = user.company
     user_data['active'] = user.active
 
     # returning user_data in json
@@ -184,8 +184,8 @@ def modify_user(current_user, public_id):
     data = request.get_json()
 
     # Checking the password
-    if not bcrypt.check_password_hash(user.password, data['password']):
-        return jsonify({'message': 'Password is invalid!'})
+    # if not bcrypt.check_password_hash(user.password, data['password']):
+    #     return jsonify({'message': 'Password is invalid!'})
 
     user.first_name = data['first_name']
     user.last_name = data['last_name']
