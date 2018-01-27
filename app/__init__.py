@@ -1,5 +1,5 @@
 from flask import Flask
-import os, pymysql, ast
+import uuid, os, pymysql, ast
 import ConfigParser
 from logging.handlers import RotatingFileHandler
 from flask_cors import CORS
@@ -127,7 +127,9 @@ def init_modules(app):
     from app.mod_main.views import mod_main
     from app.mod_user_api.views import mod_user_api
     from app.mod_auth_api.views import mod_auth_api
+    from app.mod_feature_request_api.views import mod_feature_request_api
 
     app.register_blueprint(mod_main)
     app.register_blueprint(mod_user_api)
     app.register_blueprint(mod_auth_api)
+    app.register_blueprint(mod_feature_request_api)

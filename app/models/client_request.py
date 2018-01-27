@@ -1,28 +1,17 @@
 import json, datetime
 from app import db
-from app.models.role import Role
-from app.models.client_request import ClientRequest
-from app.models.messages import Message
-from app.models.feature_requests import FeatureRequests
+from app.models.correspondence import Correspondence
 from sqlalchemy.ext.declarative import DeclarativeMeta
 from uuid import UUID
 
-class User(db.Model):
-    __tablename__ = 'user'
+class ClientRequest(db.Model):
+    __tablename__ = 'client_requests'
     __table_args__ = {'mysql_engine': 'InnoDB'}
     id = db.Column(db.Integer, primary_key=True)
-    public_id = db.Column(db.String(50), unique=True)
-    first_name = db.Column(db.String(40))
-    last_name = db.Column(db.String(40))
-    username = db.Column(db.String(30), unique=True)
-    company = db.Column(db.String(30))
-    active = db.Column(db.Boolean)
-    email_address = db.Column(db.String(40), unique=True)
-    password = db.Column(db.String(100))
-    role = db.relationship('Role', backref='user', uselist=False)
-    client_requests = db.relationship('ClientRequest', backref='user')
-    messages = db.relationship('Message', backref='user')
-    feature_requests = db.relationship('FeatureRequests', backref='user')
+    subject = db.Column(db.String(40))
+    description = db.Column(db.String(600))
+    client_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+    correspondence = db.relationship('Correspondence', backref='client_request', uselist=False)
 
     RELATIONSHIPS_TO_DICT = True
 
