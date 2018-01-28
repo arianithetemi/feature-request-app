@@ -95,18 +95,23 @@
       }
       .message {
         padding: 20px;
-        background-color: #1d8cde;
         color: white;
         font-size: 15px;
         width: 350px;
         border-radius: 15px;
         margin-bottom: 20px;
       }
+      .message-client {
+        background-color: #1d8cde;
+      }
+      .message-admin {
+        background-color: #4765da;
+      }
       .message p {
         margin-bottom: 0px;
       }
       .message-wrapper {
-        display: table;
+        display: flow-root;
       }
    </style>
 {% endblock %}
@@ -129,7 +134,7 @@
          <div class="nav flex-column nav-pills" id="v-pills-tab" role="tablist" aria-orientation="vertical">
            <a class="nav-link main-link active" data-toggle="pill" href="#home" role="tab" aria-controls="home" aria-selected="true">Home</a>
 
-           <a class="nav-link main-link my-feature-request-link" data-toggle="pill" href="#feature-requests" role="tab" aria-controls="feature-requests" aria-selected="false">Feature Requests</a>
+           <a class="nav-link main-link feature-requests-link" data-toggle="pill" href="#feature-requests" role="tab" aria-controls="feature-requests" aria-selected="false">Feature Requests</a>
 
            <a data-publicId="{{ current_user.public_id }}" class="nav-link main-link profile-link" data-toggle="pill" href="#profile" role="tab" aria-controls="profile" aria-selected="false">Profile</a>
         </div>

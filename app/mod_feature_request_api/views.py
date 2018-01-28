@@ -60,10 +60,13 @@ def get_all_client_requests(current_user):
         user_data['company'] = client.company
         for client_request in client.client_requests:
             client_request_json = {}
+            client_request_json['public_id'] = client_request.public_id
             client_request_json['subject'] = client_request.subject
             client_request_json['description'] = client_request.description
             client_request_json['client_id'] = client_request.client_id
             client_request_json['correspondence'] = client_request.correspondence.public_id
+            client_request_json['status'] = client_request.status
+            client_request_json['created_date'] = client_request.created_date
             user_data['feature_requests'].append(client_request_json)
         output.append(user_data)
 
@@ -136,6 +139,25 @@ def get_all_messages_by_correspondence(current_user, correspondence_public_id):
         message_json['user_first_name'] = message.user.first_name
         message_json['user_last_name'] = message.user.last_name
         message_json['user_role'] = message.user.role.name
+        message_json['created_date'] = message.created_date
         correspondence_response['messages'].append(message_json)
 
     return jsonify(correspondence_response)
+
+'''
+    Mark accept client feature requests
+'''
+@mod_feature_request_api.route('/accept/<feature_request_public_id>', methods=['PUT'])
+@token_required
+def mark_as_accepted_client_request(current_user, feature_request_public_id):
+    # Find the feature request by public id
+    feature_request = ClientRequest.query.filter_by(public_id=feature_request_public_id).first()
+
+    if not feature_request:
+        return jsonify({'message': 'No client feature request found!'})
+
+    feature_request.status = 'Accepted'
+
+    db.session.commit()
+
+    return jsonify({'message': 'Client request successfully accepted'})

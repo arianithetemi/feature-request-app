@@ -64,31 +64,49 @@
     text-overflow: ellipsis;
     white-space: nowrap;
   }
-  .dl-horizontal dd {
-    margin-left: 180px;
+    .dl-horizontal dd {
+      margin-left: 180px;
+    }
   }
-}
-.dl-horizontal dt {
-    float: left;
-    width: 160px;
-    clear: left;
-    font-size: 18px;
-    text-align: right;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-  }
-  .dl-horizontal dd {
-    margin-left: 180px;
-    font-size: 18px;
-  }
+  .dl-horizontal dt {
+      float: left;
+      width: 160px;
+      clear: left;
+      font-size: 18px;
+      text-align: right;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+    .dl-horizontal dd {
+      margin-left: 180px;
+      font-size: 18px;
+    }
+    .message {
+      padding: 20px;
+      color: white;
+      font-size: 15px;
+      width: 350px;
+      border-radius: 15px;
+      margin-bottom: 20px;
+    }
+    .message-client {
+      background-color: #1d8cde;
+    }
+    .message-admin {
+      background-color: #4765da;
+    }
+    .message p {
+      margin-bottom: 0px;
+    }
+    .message-wrapper {
+      display: flow-root;
+    }
 
    </style>
 {% endblock %}
 
 {% block content %}
-
-
 
 <div class="d-flex flex-column admin-nav flex-md-row align-items-center p-3 px-md-4 mb-5 bg-white border-bottom box-shadow">
  <h5 class="my-0 mr-md-auto font-weight-normal">Feature Request App</h5>
@@ -106,7 +124,7 @@
          <div class="nav flex-column nav-pills" id="v-pills-tab" role="tablist" aria-orientation="vertical">
            <a class="nav-link main-link active" data-toggle="pill" href="#overview" role="tab" aria-controls="overview" aria-selected="true">Overview</a>
            <a class="nav-link main-link" data-toggle="pill" href="#feature-requests" role="tab" aria-controls="feature-requests" aria-selected="false">Main Feature Requests</a>
-           <a class="nav-link main-link" data-toggle="pill" href="#clients-requests" role="tab" aria-controls="clients-requests" aria-selected="false">Clients Requests</a>
+           <a class="nav-link main-link feature-requests-link" data-toggle="pill" href="#clients-requests" role="tab" aria-controls="clients-requests" aria-selected="false">Clients Requests</a>
            <a class="nav-link main-link manage-clients-link" data-toggle="pill" href="#manage-clients" role="tab" aria-controls="manage-clients" aria-selected="false">Manage Clients</a>
            <a class="nav-link main-link manage-admins-link" data-toggle="pill" href="#manage-admins" role="tab" aria-controls="manage-admins" aria-selected="false">Manage Admins</a>
            <a data-publicId="{{ current_user.public_id }}" class="nav-link main-link profile-link" data-toggle="pill" href="#profile" role="tab" aria-controls="profile" aria-selected="false">Profile</a>
@@ -122,7 +140,16 @@
             <div class="tab-pane fade" id="feature-requests" role="tabpanel" aria-labelledby="feature-requests-s">feature-requests</div>
 
             <!-- Clients Requests -->
-            <div class="tab-pane fade" id="clients-requests" role="tabpanel" aria-labelledby="clients-requests">clients-requests</div>
+            <div class="tab-pane fade" id="clients-requests" role="tabpanel" aria-labelledby="clients-requests">
+
+              <div class="row">
+                <div class="col">
+                  <h4 class="title feature-clients-title"></h4>
+                  <div class="col client-feature-requests-cont"></div>
+                </div>
+              </div>
+
+            </div>
 
             <!-- Manage Clients -->
             <div class="tab-pane fade" id="manage-clients" role="tabpanel" aria-labelledby="manage-clients">
@@ -363,4 +390,5 @@
    <script src="{{ url_for('static', filename='js/manage-clients.js') }}"></script>
    <script src="{{ url_for('static', filename='js/manage-admins.js') }}"></script>
    <script src="{{ url_for('static', filename='js/profile.js') }}"></script>
+   <script src="{{ url_for('static', filename='js/admin_clients_requests.js') }}"></script>
 {% endblock %}
