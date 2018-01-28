@@ -8,6 +8,7 @@ class ClientRequest(db.Model):
     __tablename__ = 'client_requests'
     __table_args__ = {'mysql_engine': 'InnoDB'}
     id = db.Column(db.Integer, primary_key=True)
+    public_id = db.Column(db.String(50), unique=True)
     subject = db.Column(db.String(40))
     description = db.Column(db.String(600))
     client_id = db.Column(db.Integer, db.ForeignKey('user.id'))

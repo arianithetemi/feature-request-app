@@ -4,26 +4,24 @@ from app.models.user import User
 from app.models.role import Role
 from app.models.client_request import ClientRequest
 from app.models.correspondence import Correspondence
+from app.models.messages import Message
 from app import db, bcrypt, secret_key
-from app.utils.auth import token_required
+from app.utils.auth import token_required, role_required
 
 mod_feature_request_api = Blueprint('feature_request', __name__, url_prefix='/api/feature-request')
 
-@mod_feature_request_api.route('/client/add/<public_id>', methods=['POST'])
+'''
+    Client Adding new feature requests Endpoint - Token is required
+'''
+@mod_feature_request_api.route('/client/add', methods=['POST'])
 @token_required
-def client_requests(current_user, public_id):
+@role_required('client')
+def client_requests(current_user):
     # Get JSON data
     data = request.get_json()
 
-    # query user in db by public_id
-    user = User.query.filter_by(public_id=public_id).first()
-
-    # if user not found
-    if not user:
-        return jsonify({'message': 'No user found!'})
-
-    # Creating new client feature request and setting to this user
-    client_feature_request = ClientRequest(subject=data['subject'], description=data['description'], user=user)
+    # Creating new client feature request and setting to this current_user
+    client_feature_request = ClientRequest(public_id=str(uuid.uuid4()), subject=data['subject'], description=data['description'], user=current_user)
 
     # Creating Correspondence for this client request
     correspondence = Correspondence(public_id=str(uuid.uuid4()), client_request=client_feature_request)
@@ -40,19 +38,25 @@ def client_requests(current_user, public_id):
 
     return jsonify(client_request_data)
 
+'''
+    Get all clients with their feature requests - Token and Admin role is required
+'''
 @mod_feature_request_api.route('/clients', methods=['GET'])
 @token_required
+@role_required('admin')
 def get_all_client_requests(current_user):
-    users = User.query.join(User.role).filter(Role.name.contains('client')).all()
+
+    # Get all client users
+    clients = User.query.join(User.role).filter(Role.name.contains('client')).all()
 
     output = []
-    for user in users:
+    for client in clients:
         user_data = {'feature_requests': []}
-        user_data['public_id'] = user.public_id
-        user_data['first_name'] = user.first_name
-        user_data['last_name'] = user.last_name
-        user_data['company'] = user.company
-        for client_request in user.client_requests:
+        user_data['public_id'] = client.public_id
+        user_data['first_name'] = client.first_name
+        user_data['last_name'] = client.last_name
+        user_data['company'] = client.company
+        for client_request in client.client_requests:
             client_request_json = {}
             client_request_json['subject'] = client_request.subject
             client_request_json['description'] = client_request.description
@@ -62,3 +66,29 @@ def get_all_client_requests(current_user):
         output.append(user_data)
 
     return jsonify({'data': output})
+
+'''
+    Adding messages to correspondence into feature request
+'''
+@mod_feature_request_api.route('/message/<correspondence_public_id>', methods=['POST'])
+@token_required
+def send_correspondence_messages_to_feature_request(current_user, correspondence_public_id):
+    data = request.get_json()
+
+    # Find the correspondence by public id
+    correspondence = Correspondence.query.filter_by(public_id=correspondence_public_id).first()
+
+    # Creating Message and set this correspondence to it
+    message = Message(public_id=str(uuid.uuid4()), message=data['message'], correspondence=correspondence, user=current_user)
+
+    db.session.add(message)
+    db.session.commit()
+
+    message_json = {}
+    message_json['message'] = message.message
+    message_json['user_first_name'] = message.user.first_name
+    message_json['user_last_name'] = message.user.last_name
+    message_json['user_role'] = message.user.role.name
+    message_json['correspondence'] = message.correspondence.public_id
+
+    return jsonify(message_json)
