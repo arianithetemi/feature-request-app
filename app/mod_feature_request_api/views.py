@@ -70,7 +70,7 @@ def get_all_client_requests(current_user):
 '''
     Adding messages to correspondence into feature request
 '''
-@mod_feature_request_api.route('/message/<correspondence_public_id>', methods=['POST'])
+@mod_feature_request_api.route('/add/message/<correspondence_public_id>', methods=['POST'])
 @token_required
 def send_correspondence_messages_to_feature_request(current_user, correspondence_public_id):
     data = request.get_json()
@@ -92,3 +92,25 @@ def send_correspondence_messages_to_feature_request(current_user, correspondence
     message_json['correspondence'] = message.correspondence.public_id
 
     return jsonify(message_json)
+
+'''
+    Getting all feature request for specific user
+'''
+@mod_feature_request_api.route('/client', methods=['GET'])
+@token_required
+def get_client_feature_requests(current_user):
+    # Getting all feature requests for this client
+
+    # Get all client feature requests
+    client_feature_requests = ClientRequest.query.filter_by(client_id=current_user.id).all()
+
+    output = []
+    for client_feature_request in client_feature_requests:
+        client_request_json = {}
+        client_request_json['public_id'] = client_feature_request.public_id
+        client_request_json['subject'] = client_feature_request.subject
+        client_request_json['description'] = client_feature_request.description
+        client_request_json['correspondence'] = client_feature_request.correspondence.public_id
+        output.append(client_request_json)
+
+    return jsonify({'data': output})
