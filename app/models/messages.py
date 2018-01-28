@@ -8,6 +8,7 @@ class Message(db.Model):
     __table_args__ = {'mysql_engine': 'InnoDB'}
     id = db.Column(db.Integer, primary_key=True)
     public_id = db.Column(db.String(50), unique=True)
+    created_date = db.Column(db.DateTime, default=datetime.datetime.now)
     message = db.Column(db.Text(1400))
     correspondence_id = db.Column(db.Integer, db.ForeignKey('correspondence.id'))
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))

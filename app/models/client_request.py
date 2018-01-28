@@ -10,7 +10,9 @@ class ClientRequest(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     public_id = db.Column(db.String(50), unique=True)
     subject = db.Column(db.String(40))
-    description = db.Column(db.String(600))
+    status = db.Column(db.String(40), default='Pending')
+    created_date = db.Column(db.DateTime, default=datetime.datetime.now)
+    description = db.Column(db.String(1500))
     client_id = db.Column(db.Integer, db.ForeignKey('user.id'))
     correspondence = db.relationship('Correspondence', backref='client_request', uselist=False)
 

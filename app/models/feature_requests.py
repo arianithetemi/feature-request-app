@@ -11,7 +11,7 @@ class FeatureRequests(db.Model):
     title = db.Column(db.String(40))
     description = db.Column(db.String(40))
     client_priority = db.Column(db.Integer)
-    status = db.Column(db.String(40))
+    status = db.Column(db.String(40), default='Approved')
     target_date = db.Column(db.DateTime)
     product_area = db.Column(db.String(20))
     client_id = db.Column(db.Integer, db.ForeignKey('user.id'))

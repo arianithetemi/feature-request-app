@@ -32,9 +32,11 @@ def client_requests(current_user):
     db.session.commit()
 
     client_request_data = {}
-    client_request_data['subject'] = data['subject']
-    client_request_data['description'] = data['description']
+    client_request_data['subject'] = client_feature_request.subject
+    client_request_data['description'] = client_feature_request.description
     client_request_data['correspondence'] = correspondence.public_id
+    client_request_data['created_date'] = client_feature_request.created_date
+    client_request_data['status'] = client_feature_request.status
 
     return jsonify(client_request_data)
 
@@ -90,6 +92,7 @@ def send_correspondence_messages_to_feature_request(current_user, correspondence
     message_json['user_last_name'] = message.user.last_name
     message_json['user_role'] = message.user.role.name
     message_json['correspondence'] = message.correspondence.public_id
+    message_json['created_date'] = message.created_date
 
     return jsonify(message_json)
 
@@ -100,8 +103,6 @@ def send_correspondence_messages_to_feature_request(current_user, correspondence
 @token_required
 def get_client_feature_requests(current_user):
     # Getting all feature requests for this client
-
-    # Get all client feature requests
     client_feature_requests = ClientRequest.query.filter_by(client_id=current_user.id).all()
 
     output = []
@@ -114,3 +115,24 @@ def get_client_feature_requests(current_user):
         output.append(client_request_json)
 
     return jsonify({'data': output})
+
+'''
+    Getting all messages for specific correspondence of client feature request - Token required
+'''
+@mod_feature_request_api.route('/messages/<correspondence_public_id>', methods=['GET'])
+@token_required
+def get_all_messages_by_correspondence(current_user, correspondence_public_id):
+
+    # Get all messages for this correspondence_public_id
+    correspondence = Correspondence.query.filter_by(public_id=correspondence_public_id).first()
+
+    correspondence_response = {'correspondence_public_id': correspondence.public_id, 'messages': []}
+
+    for message in correspondence.messages:
+        message_json = {}
+        message_json['message'] = message.message
+        message_json['user_first_name'] = message.user.first_name
+        message_json['user_last_name'] = message.user.last_name
+        correspondence_response['messages'].append(message_json)
+
+    return jsonify(correspondence_response)

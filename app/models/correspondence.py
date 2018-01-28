@@ -8,6 +8,7 @@ class Correspondence(db.Model):
     __tablename__ = 'correspondence'
     __table_args__ = {'mysql_engine': 'InnoDB'}
     id = db.Column(db.Integer, primary_key=True)
+    created_date = db.Column(db.DateTime, default=datetime.datetime.now)
     public_id = db.Column(db.String(50), unique=True)
     client_request_id = db.Column(db.Integer, db.ForeignKey('client_requests.id'))
     messages = db.relationship('Message', backref='correspondence')
