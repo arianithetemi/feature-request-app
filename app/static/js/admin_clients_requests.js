@@ -8,10 +8,8 @@ $('.feature-requests-link').click(function() {
     method: 'GET',
     headers: {"x-access-token": localStorage.getItem('token')},
     success: function(res) {
-      if (res.data.length > 0) {
-
         res.data.map(client => {
-
+          if (client.feature_requests.length > 0) {
           client.feature_requests.map(feature_request => {
 
           var badge, acceptBtn;
@@ -47,11 +45,13 @@ $('.feature-requests-link').click(function() {
 
         });
 
-      });
-
       } else {
         $('.feature-clients-title').html("No Feature Requests!");
       }
+
+      });
+
+
     }
   });
 });

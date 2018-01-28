@@ -40,11 +40,7 @@ $(document).ready(function() {
                     type: 'GET',
                     headers: {"x-access-token": localStorage.getItem('token')},
                     success: function(data) {
-                      if (typeof data == 'string') {
-                        setTimeout(function() {
-                          document.write(data);
-                        }, 500);
-                      }
+                      document.write(data);
                     }
                   });
                }
@@ -53,6 +49,13 @@ $(document).ready(function() {
        }
    };
    ko.applyBindings(SignInViewModel, document.getElementById('sign-in'));
+
+   $('#username-email, #password').keypress(function(event) {
+    var keycode = event.keyCode || event.which;
+    if(keycode == '13') {
+      $('.sign-in-button').trigger('click');
+    }
+});
 
    if(localStorage.getItem('token') !== null) {
       $.ajax({

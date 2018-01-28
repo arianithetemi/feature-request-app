@@ -24,12 +24,15 @@ body {
   -moz-background-size: cover;
   -o-background-size: cover;
   background-size: cover;
-  font-family: 'PT Sans', sans-serif;
+  /* font-family: 'PT Sans', sans-serif; */
 }
 
-.info, .sign-up {
+.info {
+  margin-top: 10%;
+}
+
+.sign-up {
    margin-top: 15%;
-   color: #4c4c4c;
 }
 
 .info h1 {
@@ -42,7 +45,7 @@ body {
    border: 1px solid #eaeaea;
    background-color: #fff;
    border-radius: 7px;
-   box-shadow: 0 14px 28px rgba(0,0,0,0.25), 0 10px 10px rgba(0,0,0,0.22);
+   box-shadow: 0 3px 14px rgba(0,0,0,0.25), 0 9px 5px rgba(0,0,0,0.22);
    margin-bottom: 30px;
 }
 
