@@ -112,6 +112,8 @@ def get_client_feature_requests(current_user):
         client_request_json['subject'] = client_feature_request.subject
         client_request_json['description'] = client_feature_request.description
         client_request_json['correspondence'] = client_feature_request.correspondence.public_id
+        client_request_json['created_date'] = client_feature_request.created_date
+        client_request_json['status'] = client_feature_request.status
         output.append(client_request_json)
 
     return jsonify({'data': output})
@@ -133,6 +135,7 @@ def get_all_messages_by_correspondence(current_user, correspondence_public_id):
         message_json['message'] = message.message
         message_json['user_first_name'] = message.user.first_name
         message_json['user_last_name'] = message.user.last_name
+        message_json['user_role'] = message.user.role.name
         correspondence_response['messages'].append(message_json)
 
     return jsonify(correspondence_response)

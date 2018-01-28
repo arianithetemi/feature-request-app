@@ -93,6 +93,21 @@
         padding: 30px;
         background-color: #e9ecef9e;
       }
+      .message {
+        padding: 20px;
+        background-color: #1d8cde;
+        color: white;
+        font-size: 15px;
+        width: 350px;
+        border-radius: 15px;
+        margin-bottom: 20px;
+      }
+      .message p {
+        margin-bottom: 0px;
+      }
+      .message-wrapper {
+        display: table;
+      }
    </style>
 {% endblock %}
 
@@ -114,7 +129,7 @@
          <div class="nav flex-column nav-pills" id="v-pills-tab" role="tablist" aria-orientation="vertical">
            <a class="nav-link main-link active" data-toggle="pill" href="#home" role="tab" aria-controls="home" aria-selected="true">Home</a>
 
-           <a class="nav-link main-link" data-toggle="pill" href="#feature-requests" role="tab" aria-controls="feature-requests" aria-selected="false">Feature Requests</a>
+           <a class="nav-link main-link my-feature-request-link" data-toggle="pill" href="#feature-requests" role="tab" aria-controls="feature-requests" aria-selected="false">Feature Requests</a>
 
            <a data-publicId="{{ current_user.public_id }}" class="nav-link main-link profile-link" data-toggle="pill" href="#profile" role="tab" aria-controls="profile" aria-selected="false">Profile</a>
         </div>
@@ -122,9 +137,8 @@
 
       <div class="col-md-9">
          <div class="tab-content" id="v-pills-tabContent">
-            <!-- Overview Panel  -->
+            <!-- Home Panel  -->
             <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home">
-
               <div class="jumbotron client-jumbotron">
                 <h3>Hello, {{ current_user.first_name }}!</h3>
                 <hr class="my-4">
@@ -134,7 +148,51 @@
             </div>
 
             <!-- Feature Requests -->
-            <div class="tab-pane fade" id="feature-requests" role="tabpanel" aria-labelledby="feature-requests-s">Feature Requests</div>
+            <div class="tab-pane fade" id="feature-requests" role="tabpanel" aria-labelledby="feature-requests-s">
+              <div class="row mb-4">
+                <div class="col text-right">
+                  <button type="button" id="add-feature-request" data-toggle="modal" data-target="#add-feature-request-modal" class="btn btn-primary">+ Add Feature Request</button>
+                </div>
+                <!-- Add new feature Modal -->
+                <div class="modal fade" id="add-feature-request-modal" tabindex="-1" role="dialog" aria-hidden="true">
+                  <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                      <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">Add new feature request</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                          <span aria-hidden="true">&times;</span>
+                        </button>
+                      </div>
+                      <div class="modal-body">
+                         <form id="add-feature-request-form">
+                            <div class="form-group">
+                              <label for="subject-input">Subject: </label>
+                              <input type="text" placeholder="Subject of the feature" id="subject-input" data-bind="textInput: subject" class="form-control">
+                            </div>
+                            <div class="form-group">
+                              <label for="description-input">Description: </label>
+                               <textarea class="form-control" placeholder="Detailed description" data-bind="textInput: description" id="description-input" rows="5"></textarea>
+                            </div>
+                            <div class="alert alert-info" role="alert"><b>Note:</b> Please describe in details the reason you want to add this feature into the IWS platform in description above!</div>
+                            <div class="modal-footer" style="padding: 10px 0 0 0;">
+                               <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                               <button type="submit" data-bind="click: submit" class="btn btn-primary">Submit</button>
+                            </div>
+                         </form>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="row">
+                <div class="col">
+                  <h4 class="title feature-clients-title"></h4>
+                  <div class="col client-feature-requests-cont"></div>
+                </div>
+              </div>
+
+            </div>
 
             <!-- Profile -->
             <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile">
@@ -254,4 +312,5 @@
    </script>
    <script src="{{ url_for('static', filename='js/manage-clients.js') }}"></script>
    <script src="{{ url_for('static', filename='js/profile.js') }}"></script>
+   <script src="{{ url_for('static', filename='js/client_requests.js') }}"></script>
 {% endblock %}
