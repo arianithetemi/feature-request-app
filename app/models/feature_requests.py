@@ -3,16 +3,16 @@ from app import db
 from sqlalchemy.ext.declarative import DeclarativeMeta
 from uuid import UUID
 
-class FeatureRequests(db.Model):
+class FeatureRequest(db.Model):
     __tablename__ = 'feature_requests'
     __table_args__ = {'mysql_engine': 'InnoDB'}
     id = db.Column(db.Integer, primary_key=True)
     public_id = db.Column(db.String(50), unique=True)
-    title = db.Column(db.String(40))
-    description = db.Column(db.String(40))
+    title = db.Column(db.String(60))
+    description = db.Column(db.String(600))
     client_priority = db.Column(db.Integer)
     status = db.Column(db.String(40), default='Approved')
-    target_date = db.Column(db.DateTime)
+    target_date = db.Column(db.String(30))
     product_area = db.Column(db.String(20))
     client_id = db.Column(db.Integer, db.ForeignKey('user.id'))
 

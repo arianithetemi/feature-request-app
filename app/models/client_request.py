@@ -9,10 +9,10 @@ class ClientRequest(db.Model):
     __table_args__ = {'mysql_engine': 'InnoDB'}
     id = db.Column(db.Integer, primary_key=True)
     public_id = db.Column(db.String(50), unique=True)
-    subject = db.Column(db.String(40))
+    subject = db.Column(db.String(200))
     status = db.Column(db.String(40), default='Pending')
     created_date = db.Column(db.DateTime, default=datetime.datetime.now)
-    description = db.Column(db.String(1500))
+    description = db.Column(db.String(3400))
     client_id = db.Column(db.Integer, db.ForeignKey('user.id'))
     correspondence = db.relationship('Correspondence', backref='client_request', uselist=False)
 

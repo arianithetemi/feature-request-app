@@ -3,7 +3,7 @@ from app import db
 from app.models.role import Role
 from app.models.client_request import ClientRequest
 from app.models.messages import Message
-from app.models.feature_requests import FeatureRequests
+from app.models.feature_requests import FeatureRequest
 from sqlalchemy.ext.declarative import DeclarativeMeta
 from uuid import UUID
 
@@ -22,7 +22,7 @@ class User(db.Model):
     role = db.relationship('Role', backref='user', uselist=False)
     client_requests = db.relationship('ClientRequest', backref='user')
     messages = db.relationship('Message', backref='user')
-    feature_requests = db.relationship('FeatureRequests', backref='user')
+    feature_requests = db.relationship('FeatureRequest', backref='user')
 
     RELATIONSHIPS_TO_DICT = True
 

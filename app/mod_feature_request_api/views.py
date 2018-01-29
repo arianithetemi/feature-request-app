@@ -4,6 +4,7 @@ from app.models.user import User
 from app.models.role import Role
 from app.models.client_request import ClientRequest
 from app.models.correspondence import Correspondence
+from app.models.feature_requests import FeatureRequest
 from app.models.messages import Message
 from app import db, bcrypt, secret_key
 from app.utils.auth import token_required, role_required
@@ -161,3 +162,46 @@ def mark_as_accepted_client_request(current_user, feature_request_public_id):
     db.session.commit()
 
     return jsonify({'message': 'Client request successfully accepted'})
+
+@mod_feature_request_api.route('/admin/add/<client_public_id>', methods=['POST'])
+@token_required
+@role_required('admin')
+def add_approved_feature_requests(current_user, client_public_id):
+    # Getting the json data from request
+    data = request.get_json()
+
+    # Finding the client user
+    client = User.query.filter_by(public_id=client_public_id).first()
+
+    # Checking if the client priority exists in any feature request of this client
+    if db.session.query(FeatureRequest).filter_by(client_id=client.id, client_priority=data['client_priority']).count():
+
+        # Number from which to offset
+        client_priority_offset = int(data['client_priority']) - 1
+
+        # Getting all feature requests offseting from the given client priority
+        total_row = db.session.query(FeatureRequest).offset(client_priority_offset).all()
+
+        for row in total_row:
+            row.client_priority = row.client_priority+1
+
+        db.session.commit()
+
+    # Creating the instance of feature request and assign to this client
+    feature_request = FeatureRequest(public_id=str(uuid.uuid4()), title=data['title'], description=data['description'], client_priority=data['client_priority'], target_date=data['target_date'], product_area=data['product_area'], user=client)
+
+    db.session.add(feature_request)
+    db.session.commit()
+
+    feature_request_response = {}
+    feature_request_response['public_id'] = feature_request.public_id
+    feature_request_response['title'] = feature_request.title
+    feature_request_response['description'] = feature_request.description
+    feature_request_response['client_priority'] = feature_request.client_priority
+    feature_request_response['target_date'] = feature_request.target_date
+    feature_request_response['product_area'] = feature_request.product_area
+    feature_request_response['user_first_name'] = feature_request.user.first_name
+    feature_request_response['user_last_name'] = feature_request.user.last_name
+    feature_request_response['user_company'] = feature_request.user.company
+
+    return jsonify(feature_request_response)
