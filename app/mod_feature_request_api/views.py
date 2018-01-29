@@ -163,6 +163,9 @@ def mark_as_accepted_client_request(current_user, feature_request_public_id):
 
     return jsonify({'message': 'Client request successfully accepted'})
 
+'''
+    Adding approved feature requests and assign to clients
+'''
 @mod_feature_request_api.route('/admin/add/<client_public_id>', methods=['POST'])
 @token_required
 @role_required('admin')
@@ -177,15 +180,12 @@ def add_approved_feature_requests(current_user, client_public_id):
     if db.session.query(FeatureRequest).filter_by(client_id=client.id, client_priority=data['client_priority']).count():
 
         # Number from which to offset
-        client_priority_offset = int(data['client_priority']) - 1
+        client_priority_offset = int(data['client_priority']-1)
 
-        # Getting all feature requests offseting from the given client priority
-        total_row = db.session.query(FeatureRequest).offset(client_priority_offset).all()
+        total_row = FeatureRequest.query.filter_by(client_id=client.id).order_by(FeatureRequest.client_priority.asc()).offset(client_priority_offset).all()
 
         for row in total_row:
-            row.client_priority = row.client_priority+1
-
-        db.session.commit()
+            row.client_priority = int(row.client_priority+1)
 
     # Creating the instance of feature request and assign to this client
     feature_request = FeatureRequest(public_id=str(uuid.uuid4()), title=data['title'], description=data['description'], client_priority=data['client_priority'], target_date=data['target_date'], product_area=data['product_area'], user=client)
@@ -205,3 +205,37 @@ def add_approved_feature_requests(current_user, client_public_id):
     feature_request_response['user_company'] = feature_request.user.company
 
     return jsonify(feature_request_response)
+
+'''
+    Get all clients with their approved feature requests - Token and Admin role is required
+'''
+@mod_feature_request_api.route('/approved', methods=['GET'])
+@token_required
+@role_required('admin')
+def get_all_clients_approved_feature_requests(current_user):
+
+    # Get all client users
+    clients = User.query.join(User.role).filter(Role.name.contains('client')).all()
+
+    output = []
+    for client in clients:
+        user_data = {'approved_feature_requests': []}
+
+        user_data['public_id'] = client.public_id
+        user_data['first_name'] = client.first_name
+        user_data['last_name'] = client.last_name
+        user_data['company'] = client.company
+        for feature_request in client.feature_requests:
+            client_request_json = {}
+            client_request_json['public_id'] = feature_request.public_id
+            client_request_json['title'] = feature_request.title
+            client_request_json['description'] = feature_request.description
+            client_request_json['status'] = feature_request.status
+            client_request_json['target_date'] = feature_request.target_date
+            client_request_json['client_priority'] = feature_request.client_priority
+            client_request_json['product_area'] = feature_request.product_area
+
+            user_data['approved_feature_requests'].append(client_request_json)
+        output.append(user_data)
+
+    return jsonify({'data': output})
