@@ -87,13 +87,10 @@ $('body').on('click', '.mark-accepted', function() {
           }
         }
       });
-
     } else {
      return false;
     }
   });
-
-
 });
 
 

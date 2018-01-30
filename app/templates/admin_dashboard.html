@@ -26,13 +26,13 @@
       padding-left: 16px;
       border-bottom: none!important;
    }
-   #manage-clients .nav-item {
+   #manage-clients .nav-item, .inner-tabs .nav-item {
       border-radius: 0!important;
       background-color: transparent;
       color: #0093f3;
       border-bottom: 2px solid #dadada;
    }
-   #manage-clients .nav-link.active {
+   #manage-clients .nav-link.active, .inner-tabs .nav-link.active {
       background-color: transparent;
       font-weight: bold;
       color: #0093f3;
@@ -125,7 +125,7 @@
          <!-- Admin Menu -->
          <div class="nav flex-column nav-pills" id="v-pills-tab" role="tablist" aria-orientation="vertical">
            <a class="nav-link main-link active" data-toggle="pill" href="#overview" role="tab" aria-controls="overview" aria-selected="true">Overview</a>
-           <a class="nav-link main-link main-feature-requests" data-toggle="pill" href="#feature-requests" role="tab" aria-controls="feature-requests" aria-selected="false">Main Feature Requests</a>
+           <a class="nav-link main-link main-feature-requests-link" data-toggle="pill" href="#feature-requests" role="tab" aria-controls="feature-requests" aria-selected="false">Main Feature Requests</a>
            <a class="nav-link main-link feature-requests-link" data-toggle="pill" href="#clients-requests" role="tab" aria-controls="clients-requests" aria-selected="false">Clients Requests</a>
            <a class="nav-link main-link manage-clients-link" data-toggle="pill" href="#manage-clients" role="tab" aria-controls="manage-clients" aria-selected="false">Manage Clients</a>
            <a class="nav-link main-link manage-admins-link" data-toggle="pill" href="#manage-admins" role="tab" aria-controls="manage-admins" aria-selected="false">Manage Admins</a>
@@ -140,6 +140,7 @@
 
             <!-- Feature Requests -->
             <div class="tab-pane fade" id="feature-requests" role="tabpanel" aria-labelledby="feature-requests-s">
+              <!-- First Row in main feature request -->
               <div class="row mb-4">
                 <div class="col text-right">
                   <button type="button" id="add-approved-feature-request" data-toggle="modal" data-target="#add-approved-feature-request-modal" class="btn btn-primary">+ Add Feature Request</button>
@@ -196,6 +197,46 @@
                   </div>
                 </div>
               </div>
+
+              <!-- Inner Tabs in main feature requests (approved, in progress, closed) -->
+              <div class="inner-tabs">
+                <nav class="nav main-feature-requests-tabs nav-pills nav-justified">
+                  <a class="nav-item nav-link main-feature-requests-link active" data-toggle="pill" role="tab" href="#approved-feature-requests">Officially Approved</a>
+
+                  <a class="nav-item nav-link main-feature-requests-link" data-toggle="pill" role="tab" href="#in-progress-feature-requests">In Progress</a>
+
+                  <a class="nav-item nav-link main-feature-requests-link" data-toggle="pill" role="tab" href="#closed-feature-requests">Closed</a>
+                </nav>
+                </div>
+
+                <div>
+
+                <div class="tab-content">
+                   <div class="tab-pane fade show active" id="approved-feature-requests" role="tabpanel">
+                      <h4 class="title approved-clients-title"></h4>
+                      <!-- Content -->
+                      <div class="col mt-4 approved-feature-requests-cont"></div>
+                   </div>
+
+                   <div class="tab-pane fade" id="in-progress-feature-requests" role="tabpanel">
+                      <div class="table-responsive">
+                         <h4 class="title in-progress-clients-title"></h4>
+                         <!-- Content -->
+                         <div class="col mt-4 inprogress-feature-requests-cont"></div>
+                      </div>
+                   </div>
+
+                   <div class="tab-pane fade" id="closed-feature-requests" role="tabpanel">
+                      <div class="table-responsive">
+                         <h4 class="title closed-clients-title"></h4>
+                         <!-- Content -->
+                         <div class="col mt-4 closed-feature-requests-cont"></div>
+                      </div>
+                   </div>
+                </div>
+
+                </div>
+
 
 
             </div>

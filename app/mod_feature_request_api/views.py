@@ -177,10 +177,10 @@ def add_approved_feature_requests(current_user, client_public_id):
     client = User.query.filter_by(public_id=client_public_id).first()
 
     # Checking if the client priority exists in any feature request of this client
-    if db.session.query(FeatureRequest).filter_by(client_id=client.id, client_priority=data['client_priority']).count():
+    if db.session.query(FeatureRequest).filter_by(client_id=client.id, client_priority=int(data['client_priority'])).count():
 
         # Number from which to offset
-        client_priority_offset = int(data['client_priority']-1)
+        client_priority_offset = int(data['client_priority'])-1
 
         total_row = FeatureRequest.query.filter_by(client_id=client.id).order_by(FeatureRequest.client_priority.asc()).offset(client_priority_offset).all()
 
@@ -188,7 +188,7 @@ def add_approved_feature_requests(current_user, client_public_id):
             row.client_priority = int(row.client_priority+1)
 
     # Creating the instance of feature request and assign to this client
-    feature_request = FeatureRequest(public_id=str(uuid.uuid4()), title=data['title'], description=data['description'], client_priority=data['client_priority'], target_date=data['target_date'], product_area=data['product_area'], user=client)
+    feature_request = FeatureRequest(public_id=str(uuid.uuid4()), title=data['title'], description=data['description'], client_priority=int(data['client_priority']), target_date=data['target_date'], product_area=data['product_area'], user=client)
 
     db.session.add(feature_request)
     db.session.commit()
@@ -215,7 +215,7 @@ def add_approved_feature_requests(current_user, client_public_id):
 def get_all_clients_approved_feature_requests(current_user):
 
     # Get all client users
-    clients = User.query.join(User.role).filter(Role.name.contains('client')).all()
+    clients = User.query.join(User.role).filter(Role.name.contains('client')).order_by(User.id.asc()).all()
 
     output = []
     for client in clients:
@@ -239,3 +239,39 @@ def get_all_clients_approved_feature_requests(current_user):
         output.append(user_data)
 
     return jsonify({'data': output})
+
+'''
+    Set in progress client feature requests
+'''
+@mod_feature_request_api.route('/progress/<feature_request_public_id>', methods=['PUT'])
+@token_required
+def set_in_progress_client_request(current_user, feature_request_public_id):
+    # Find the feature request by public id
+    feature_request = FeatureRequest.query.filter_by(public_id=feature_request_public_id).first()
+
+    if not feature_request:
+        return jsonify({'message': 'No feature request found!'})
+
+    feature_request.status = 'In Progress'
+
+    db.session.commit()
+
+    return jsonify({'message': 'Feature request successfully set in progress'})
+
+'''
+    Mark as closed client feature requests
+'''
+@mod_feature_request_api.route('/close/<feature_request_public_id>', methods=['PUT'])
+@token_required
+def mark_closed_client_request(current_user, feature_request_public_id):
+    # Find the feature request by public id
+    feature_request = FeatureRequest.query.filter_by(public_id=feature_request_public_id).first()
+
+    if not feature_request:
+        return jsonify({'message': 'No feature request found!'})
+
+    feature_request.status = 'Closed'
+
+    db.session.commit()
+
+    return jsonify({'message': 'Feature request successfully marked as closed'})
