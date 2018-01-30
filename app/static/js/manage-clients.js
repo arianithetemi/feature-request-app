@@ -81,6 +81,14 @@ $(document).on("click", "#approve-client", function(){
          url: "/api/user/activate/"+userPublicId,
          method: "PUT",
          contentType: 'application/json',
+         beforeSend: function() {
+           swal({
+             title: "In progress!",
+             text: "Sending email to the client!",
+             icon: "info",
+             buttons: false
+           });
+         },
          headers: {"x-access-token": localStorage.getItem('token')},
          success: function(res) {
             if(res.message == "The user has been activated!") {

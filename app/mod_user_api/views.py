@@ -113,6 +113,13 @@ def add_admin(current_user):
     # Creating instance of role and set to this user
     role = Role(name='admin', description="Administrator to manage clients, feature requests and message to clients.", user=user)
 
+    msg = Message("IWS - Feature Request App - Admin Account",
+                sender=current_user.email_address,
+              recipients=[user.email_address])
+    msg.html = "Hi " + user.first_name + ", <br/><br/> You are added as admin user in IWS Feature Request App. <br/><br/> Your username is: <b>" + user.username + "</b><br/>Your email address is: <b>"+ user.email_address +"</b><br/>Your password is  <b>"+ data['password'] +'</b>.<br /><br/> Application Link: <a href="http://'+request.host+'">'+request.host+'</a> <br/><br/> Best Regards, <br/> ' + current_user.first_name + " " + current_user.last_name + "<br/>IWS Staff member"
+
+    mail.send(msg)
+
     # Executing queries
     db.session.add(user)
     db.session.add(role)
@@ -165,7 +172,7 @@ def activate_user(current_user, public_id):
     msg = Message("IWS - Feature Request App - Account Activated",
                 sender=current_user.email_address,
               recipients=[user.email_address])
-    msg.html = "Hi " + user.first_name + ", <br/><br/> Your account has been successfully activated from IWS Feature Request Staff. <br/><br/> Your username is: <b>" + user.username + "</b><br/>Your password remains the same. <br/><br/> Best Regards, <br/> " + current_user.first_name + " " + current_user.last_name
+    msg.html = "Hi " + user.first_name + ", <br/><br/> Your account has been successfully activated from IWS Feature Request Staff. <br/><br/> Your username is: <b>" + user.username + "</b><br/>Your email address is: <b>"+ user.email_address +"</b><br/>Your password remains the same "+'.<br /><br/> Application Link: <a href="http://'+request.host+'">'+request.host+'</a> <br/><br/> Best Regards, <br/> ' + current_user.first_name + " " + current_user.last_name + "<br/>IWS Staff member"
 
     mail.send(msg)
 

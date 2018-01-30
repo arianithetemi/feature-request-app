@@ -63,6 +63,14 @@ var signUpAdminViewModel = {
             dataType: 'json',
             data: JSON.stringify(jsonData),
             headers: {"x-access-token": localStorage.getItem('token')},
+            beforeSend: function() {
+              swal({
+                title: "In progress!",
+                text: "Sending the email!",
+                icon: "info",
+                buttons: false
+              });
+            },
             success: function(data) {
                if(data.message == 'Username is taken!') {
                   $('.username-err').html('This ' + data.message.toLowerCase());
