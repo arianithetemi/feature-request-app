@@ -1,5 +1,5 @@
 # IWS Feature Request App [![Build Status](https://travis-ci.org/arianithetemi/feature-request-app.svg?branch=master)](https://travis-ci.org/arianithetemi/feature-request-app)
-IWS Feature Request App is a web application based on Token-based Authentication RESTful API and other cutting-edge technologies. The main objective of this app is to ease the way of managing feature requests. Once client users are approved as official client by admins, they can send their feature requests, admin and client users corresponds with messages to these feature requests, then admin can approve and manage these feature requests, manage clients and other admins too.
+IWS Feature Request App is a web application built on Token-based Authentication RESTful API and other cutting-edge technologies. The main objective of this app is to ease the way of managing feature requests. Client users can register with their information and by default are inactive, admins will approve as active these clients, clients can send their feature requests, admin and client users corresponds with messages to these feature requests, then admin can approve and manage main feature requests, set them in progress, and mark them as closed, manage clients and other admins too.
 
 **API Documentation will be available soon!**
 
@@ -225,5 +225,9 @@ After the tests are completed you will see the result.
    ```
    sudo service apache2 restart
    ```
+## Technologies used:
+ * Server-side scripting: **Python 2.7**
+ * Web
+   
 ## Author
  * **Arianit Hetemi**
