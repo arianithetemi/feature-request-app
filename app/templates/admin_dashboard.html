@@ -84,6 +84,10 @@
       margin-left: 180px;
       font-size: 18px;
     }
+    .admin-jumbotron {
+      padding: 30px;
+      background-color: #e9ecef9e;
+    }
     .message {
       padding: 20px;
       color: white;
@@ -124,7 +128,7 @@
       <div class="col-md-3">
          <!-- Admin Menu -->
          <div class="nav flex-column nav-pills" id="v-pills-tab" role="tablist" aria-orientation="vertical">
-           <a class="nav-link main-link active" data-toggle="pill" href="#overview" role="tab" aria-controls="overview" aria-selected="true">Overview</a>
+           <a class="nav-link main-link active" data-toggle="pill" href="#overview" role="tab" aria-controls="overview" aria-selected="true">Home</a>
            <a class="nav-link main-link main-feature-requests-link" data-toggle="pill" href="#feature-requests" role="tab" aria-controls="feature-requests" aria-selected="false">Main Feature Requests</a>
            <a class="nav-link main-link feature-requests-link" data-toggle="pill" href="#clients-requests" role="tab" aria-controls="clients-requests" aria-selected="false">Clients Requests</a>
            <a class="nav-link main-link manage-clients-link" data-toggle="pill" href="#manage-clients" role="tab" aria-controls="manage-clients" aria-selected="false">Manage Clients</a>
@@ -136,7 +140,17 @@
       <div class="col-md-9">
          <div class="tab-content" id="v-pills-tabContent">
             <!-- Overview Panel  -->
-            <div class="tab-pane fade show active" id="overview" role="tabpanel" aria-labelledby="overview">overview</div>
+            <div class="tab-pane fade show active" id="overview" role="tabpanel" aria-labelledby="overview">
+
+              <div class="jumbotron admin-jumbotron">
+                <h3>Hello, {{ current_user.first_name }}!</h3>
+                <hr class="my-4">
+                <p class="lead">Welcome to IWS Feature Request App - Admin Dashboard. As an admin on IWS platform you can add official approved feature requests, set them in progress and mark them as closed under <b>Main Feature Requests</b> link on the left menu.</p> <hr />
+                <p class="lead">You can see all the clients feature requests and correspond with messages for each feature request of clients under the <b>Clients Requests</b> link.</p>
+                <p class="lead">Approve pending clients and see active ones under the <b>Manage Clients</b>. Add new admins under the link <b>Manage Admins</b></p>
+              </div>
+
+            </div>
 
             <!-- Feature Requests -->
             <div class="tab-pane fade" id="feature-requests" role="tabpanel" aria-labelledby="feature-requests-s">

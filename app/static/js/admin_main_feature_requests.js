@@ -20,7 +20,6 @@ $('#add-approved-feature-request').click(function() {
            // Populating the a selection array with active clients, then pass it to view model
            clientsSelectionArray = [];
            res.map(client => {
-              console.log(client.first_name, client.public_id)
               clientsSelectionArray.push({"publicId": client.public_id,
                                      "fullNameCompany": client.first_name + ' ' + client.last_name + ' - ' + client.company,
                                      "parent": null});
@@ -97,7 +96,10 @@ $('#add-approved-feature-request').click(function() {
            ko.applyBindings(approvedFeatureRequestViewModel, document.getElementById('add-approved-feature-request-form'));
 
         } else {
-           console.log('No clients');
+         swal("Warning!", "You cannot add feature request while there is no active client!", "warning")
+          .then(function() {
+            $('#add-approved-feature-request-modal').modal('hide');
+          });
         }
      }
   });
@@ -132,7 +134,7 @@ $('.main-feature-requests-link').click(function() {
                 <p style="margin-bottom: 0px;" class="card-text"><b>Client:</b> '+ client.first_name +' '+client.last_name+' <br /> <b>Company:</b> '+client.company+' <br /> <b>Target Date: </b> '+feature_request.target_date+' <br/> <b>Client Priority: </b> '+feature_request.client_priority+' <br/> <b>Product Area:</b> '+feature_request.product_area+' <br /> <b>Description:</b> '+ feature_request.description +' </p>\
               </div>\
             </div>');
-          }, 300);
+          }, 200);
 
           } else if (feature_request.status == "In Progress") {
             badge = '<span style="top: -2px; position:relative;" id="badge-'+feature_request.public_id+'" class="badge badge-warning">In Progress</span>';
@@ -145,7 +147,7 @@ $('.main-feature-requests-link').click(function() {
                 <p style="margin-bottom: 0px;" class="card-text"><b>Client:</b> '+ client.first_name +' '+client.last_name+' <br /> <b>Company:</b> '+client.company+' <br /> <b>Target Date: </b> '+feature_request.target_date+' <br/> <b>Client Priority: </b> '+feature_request.client_priority+' <br/> <b>Product Area:</b> '+feature_request.product_area+' <br /> <b>Description:</b> '+ feature_request.description +' </p>\
               </div>\
             </div>');
-          }, 300);
+          }, 200);
 
         } else if (feature_request.status == "Closed") {
 
@@ -158,7 +160,7 @@ $('.main-feature-requests-link').click(function() {
                 <p style="margin-bottom: 0px;" class="card-text"><b>Client:</b> '+ client.first_name +' '+client.last_name+' <br /> <b>Company:</b> '+client.company+' <br /> <b>Target Date: </b> '+feature_request.target_date+' <br/> <b>Client Priority: </b> '+feature_request.client_priority+' <br/> <b>Product Area:</b> '+feature_request.product_area+' <br /> <b>Description:</b> '+ feature_request.description +' </p>\
               </div>\
             </div>');
-            }, 300);
+          }, 200);
           }
         });
       } else {
