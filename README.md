@@ -3,6 +3,18 @@ IWS Feature Request App is a web application built on Token-based Authentication
 
 **API Documentation will be available soon!**
 
+## Technologies used:
+ * Server-side scripting: **Python 2.7**
+ * Backend Framework: **Flask**
+ * Database: **MySQL**
+ * ORM: **SQLAlchemy**
+ * Javascript: **KnockoutJS and jQuery**
+ * Responsive Interface: **Bootstrap**
+ * Authentication: **JSON Web Token**
+ * Web Service API: **REST**
+ * Continuous Integration: **Travis CI**
+ 
+
 ## Getting Started
 These instructions will get you a copy of the project up and running on your local machine for development and testing purposes. See deployment section below for instructions on how to deploy the project on a live system.
 ## Local Installation
@@ -225,9 +237,6 @@ After the tests are completed you will see the result.
    ```
    sudo service apache2 restart
    ```
-## Technologies used:
- * Server-side scripting: **Python 2.7**
- * Web
    
 ## Author
  * **Arianit Hetemi**
