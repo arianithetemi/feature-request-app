@@ -8,7 +8,7 @@ app = create_app('dev_pro')
 with app.app_context():
 
     # Creating Admin
-    admin_hash_password = bcrypt.generate_password_hash('toor')
+    admin_hash_password = bcrypt.generate_password_hash('johndoe')
     admin = User(public_id=str(uuid.uuid4()), first_name='John', last_name='Doe', username='johny', company='IWS', active=True, email_address='johny@doe.com', password=admin_hash_password)
 
     admin_role = Role(name='admin', description="Administrator to manage clients, feature requests and message to clients.", user=admin)
