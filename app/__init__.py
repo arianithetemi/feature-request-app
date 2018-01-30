@@ -17,7 +17,7 @@ bcrypt = Bcrypt()
 mail = Mail()
 
 # Generating random 24 chars for secret key
-secret_key = os.urandom(24).encode('hex')
+secret_key = '123secretkeyhello123'
 
 # When creating instance of flask app we need to pass the config_type(dev_pro or test)
 def create_app(config_type):
