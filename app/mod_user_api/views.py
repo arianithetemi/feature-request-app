@@ -60,6 +60,9 @@ def add_user():
     if db.session.query(User).filter_by(username=data['username']).count():
         return jsonify({'message': 'Username is taken!'})
 
+    if db.session.query(User).filter_by(email_address=data['email_address']).count():
+        return jsonify({'message': 'This email is taken!'})
+
     # Checking password with confirm password
     if data['password'] != data['confirm_password']:
         return jsonify({'message': 'Password and Confirm Password do not match!'})
@@ -93,6 +96,9 @@ def add_admin(current_user):
 
     if db.session.query(User).filter_by(username=data['username']).count():
         return jsonify({'message': 'Username is taken!'})
+
+    if db.session.query(User).filter_by(email_address=data['email_address']).count():
+        return jsonify({'message': 'This email is taken!'})
 
     # Checking password with confirm password
     if data['password'] != data['confirm_password']:
@@ -178,12 +184,15 @@ def modify_user(current_user, public_id):
     # query user in db by public_id
     user = User.query.filter_by(public_id=public_id).first()
 
+    # Getting json data from request
+    data = request.get_json()
+
+    if user.email_address != data['email_address'] and db.session.query(User).filter_by(email_address=data['email_address']).count():
+        return jsonify({'message': 'This email is taken!'})
+
     # if user not found
     if not user:
         return jsonify({'message': 'No user found!'})
-
-    # Getting json data from request
-    data = request.get_json()
 
     # Checking the password
     # if not bcrypt.check_password_hash(user.password, data['password']):

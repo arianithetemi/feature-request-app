@@ -7,6 +7,10 @@ html, body {
    height: 100%;
 }
 
+.swal-text {
+  text-align: center!important;
+}
+
 .se-pre-con {
 	position: fixed;
 	left: 0px;
@@ -59,7 +63,7 @@ body {
    margin-bottom: .5rem;
 }
 
-.sign-in-err, .validationMessage, .username-err, .match-pass-err {
+.sign-in-err, .validationMessage, .username-err, .match-pass-err, .email-err {
    margin-bottom: .5rem;
    color: red;
    font-size: 14px;

@@ -50,7 +50,7 @@
      border-width: 1px;
      box-shadow: none;
    }
-   .sign-in-err, .validationMessage, .username-err, .match-pass-err, .pass-err {
+   .sign-in-err, .validationMessage, .username-err, .match-pass-err, .pass-err, .email-err {
       margin-bottom: .5rem;
       color: red;
       font-size: 14px;
@@ -115,7 +115,7 @@
 {% block content %}
 
 <div class="d-flex flex-column admin-nav flex-md-row align-items-center p-3 px-md-4 mb-5 bg-white border-bottom box-shadow">
- <h5 class="my-0 mr-md-auto font-weight-normal">Feature Request App</h5>
+ <h5 class="my-0 mr-md-auto font-weight-normal">IWS Feature Request App</h5>
  <h5 class="my-0 mr-md-auto text-center">Admin Dashboard</h5>
  <nav class="my-2 my-md-0 mr-md-3">
    <a class="p-2 text-dark">{{ current_user.first_name + ' ' + current_user.last_name }}</a>
@@ -346,6 +346,7 @@
                                  </div>
                                  <div class="form-group">
                                     <input type="email" placeholder="Email Address" data-bind="textInput: emailAddress" class="form-control" id="email-address">
+                                    <div class="email-err"></div>
                                  </div>
                                  <div class="form-group">
                                     <input type="text" placeholder="Company" data-bind="textInput: company" class="form-control" id="company">
@@ -439,6 +440,7 @@
                           <div class="form-group">
                             <label for="emailAddress-input">Email Address: </label>
                              <input type="email" data-bind="textInput: emailAddress" id="emailAddress-input" class="form-control">
+                             <div class="email-err"></div>
                           </div>
                           <div class="form-group">
                             <label for="company-input">Company: </label>

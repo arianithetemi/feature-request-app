@@ -59,15 +59,19 @@ $('#edit-profile-link').click(function() {
                   data: JSON.stringify(jsonData),
                   headers: {"x-access-token": localStorage.getItem('token')},
                   success: function(data) {
-                    swal("Success!", "Profile updated successfully", "success")
-                     .then(function() {
-                        $('#edit-profile-modal').modal('hide');
-                        $('#p-first-name').html(data.user.first_name);
-                        $('#p-last-name').html(data.user.last_name);
-                        $('#p-username').html(data.user.username);
-                        $('#p-email').html(data.user.email_address);
-                        $('#p-company').html(data.user.company);
-                     });
+                      if (data.message == 'This email is taken!') {
+                        $('.email-err').html(data.message);
+                      } else {
+                        swal("Success!", "Profile updated successfully", "success")
+                         .then(function() {
+                            $('#edit-profile-modal').modal('hide');
+                            $('#p-first-name').html(data.user.first_name);
+                            $('#p-last-name').html(data.user.last_name);
+                            $('#p-username').html(data.user.username);
+                            $('#p-email').html(data.user.email_address);
+                            $('#p-company').html(data.user.company);
+                         });
+                      }
                     }
                });
             }
@@ -85,8 +89,12 @@ $('#edit-profile-link').click(function() {
       ko.applyBindings(updateProfileViewModel, document.getElementById('edit-profile'));
     }
   });
+
 });
 
+$('#edit-profile-modal').on('hidden.bs.modal', function () {
+  $('.email-err').html("");
+});
 
 // Changing Password ViewModel
 var mustEqual = function(val, other) {
@@ -95,8 +103,8 @@ var mustEqual = function(val, other) {
 
 var updatePasswordViewModel = {
    currentPassword: ko.observable("").extend({required: true}),
-   newPassword: ko.observable("").extend({required: true}),
-   confirmNewPassword: ko.observable("").extend({required: true}),
+   newPassword: ko.observable("").extend({required: true, minLength: 6}),
+   confirmNewPassword: ko.observable(""),
    submit: function() {
       if (updatePasswordViewModel.errors().length === 0) {
          var jsonData = {
@@ -131,8 +139,17 @@ var updatePasswordViewModel = {
    }
 };
 
+$('#change-password-modal').on('hidden.bs.modal', function () {
+  $('#change-password-form').trigger('reset');
+  $('.validationMessage').hide();
+})
+
 $('#current-password').keyup(function() {
    $('.pass-err').html('');
+});
+
+$('#emailAddress-input').keyup(function() {
+   $('.email-err').html('');
 });
 
 updatePasswordViewModel.confirmNewPassword = ko.observable().extend({

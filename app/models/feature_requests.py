@@ -8,12 +8,12 @@ class FeatureRequest(db.Model):
     __table_args__ = {'mysql_engine': 'InnoDB'}
     id = db.Column(db.Integer, primary_key=True)
     public_id = db.Column(db.String(50), unique=True)
-    title = db.Column(db.String(60))
-    description = db.Column(db.String(600))
+    title = db.Column(db.String(200))
+    description = db.Column(db.String(2000))
     client_priority = db.Column(db.Integer)
     status = db.Column(db.String(40), default='Approved')
     target_date = db.Column(db.String(30))
-    product_area = db.Column(db.String(20))
+    product_area = db.Column(db.String(40))
     client_id = db.Column(db.Integer, db.ForeignKey('user.id'))
 
     RELATIONSHIPS_TO_DICT = True

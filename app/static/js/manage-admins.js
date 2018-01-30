@@ -42,7 +42,7 @@ var signUpAdminViewModel = {
    username: ko.observable("").extend({required: true, minLength: 5, maxLength: 20}),
    emailAddress: ko.observable("").extend({required: true, email: true}),
    company: ko.observable("").extend({required: true}),
-   password: ko.observable(""),
+   password: ko.observable("").extend({minLength: 6}),
    confirmPassword: ko.observable(""),
    submit: function() {
       if (signUpAdminViewModel.errors().length === 0) {
@@ -66,6 +66,8 @@ var signUpAdminViewModel = {
             success: function(data) {
                if(data.message == 'Username is taken!') {
                   $('.username-err').html('This ' + data.message.toLowerCase());
+               } else if (data.message == 'This email is taken!') {
+                 $('.email-err').html(data.message);
                } else if (data.message == 'Password and Confirm Password do not match!') {
                   $('.pass-up-err').html(data.message);
                } else {
@@ -93,6 +95,10 @@ var signUpAdminViewModel = {
 
 $('#username-admin').keyup(function() {
    $('.username-err').html('');
+});
+
+$('#email-address').keyup(function() {
+   $('.email-err').html('');
 });
 
 signUpAdminViewModel.confirmPassword = ko.observable().extend({
