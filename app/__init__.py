@@ -16,8 +16,7 @@ bcrypt = Bcrypt()
 # Flask Mail
 mail = Mail()
 
-# Generating random 24 chars for secret key
-secret_key = '123secretkeyhello123'
+secret_key = 'AF168231D62E8B22765AFD6F3C3F7'
 
 # When creating instance of flask app we need to pass the config_type(dev_pro or test)
 def create_app(config_type):
