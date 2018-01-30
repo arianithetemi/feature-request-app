@@ -1,5 +1,8 @@
 # IWS Feature Request App [![Build Status](https://travis-ci.org/arianithetemi/feature-request-app.svg?branch=master)](https://travis-ci.org/arianithetemi/feature-request-app)
 IWS Feature Request App is a web application based on Token-based Authentication RESTful API and other cutting-edge technologies. The main objective of this app is to ease the way of managing feature requests. Once client users are approved as official client by admins, they can send their feature requests, admin and client users corresponds with messages to these feature requests, then admin can approve and manage these feature requests, manage clients and other admins too.
+
+**API Documentation will be available soon!**
+
 ## Getting Started
 These instructions will get you a copy of the project up and running on your local machine for development and testing purposes. See deployment section below for instructions on how to deploy the project on a live system.
 ## Local Installation
@@ -92,7 +95,7 @@ vi config.cfg
 ```
 bash populate_db.sh
 ```
-> Admin username: **johny** and password: **toor**                              
+> Admin username: **johny** and password: **johndoe**                              
 > Client username: **william** and password: **123456**                             
 > (Don't forget that the client must be approved by admin in order to login)
 
