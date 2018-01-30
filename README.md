@@ -164,16 +164,24 @@ After the tests are completed you will see the result.
    ```
    sudo bash install.sh
    ```
-   4. Make a copy of the wsgi template file and edit it with root privileges:
+   4. Populating database (creating tables and inserting two users):
+   ```
+   bash populate_db.sh
+   ```
+   > Admin username: **johny** and password: **johndoe**                              
+   > Client username: **william** and password: **123456**                             
+   > (Don't forget that the client must be approved by admin in order to login)
+   
+   5. Make a copy of the wsgi template file and edit it with root privileges:
    ```
    sudo cp app-template.wsgi app.wsgi
    sudo vi app.wsgi
    ```
-   5. Edit the project's path in the first line of app.wsgi:
+   6. Edit the project's path in the first line of app.wsgi:
    ```
    app_dir_path = '/var/www/feature-request-app'
    ```
-   6. Create, navigate and fill out the project config file(database + email):
+   7. Create, navigate and fill out the project config file(database + email):
    ```
    sudo cp config-template.cfg config.cfg
    sudo vi config.cfg
