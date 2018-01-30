@@ -40,7 +40,7 @@ $('#add-approved-feature-request').click(function() {
              areaSelection: areaSelectionArray,
              areaSelect: ko.observable().extend({required: {message: "Please select an area."}}),
              title: ko.observable("").extend({required: true, minLength: 10}),
-             description: ko.observable("").extend({required: true, minLength: 40}),
+             description: ko.observable("").extend({required: true}),
              clientPriority: ko.observable("").extend({required: true}),
              targetDate: ko.observable("").extend({required: true}),
               submit: function() {
@@ -76,6 +76,7 @@ $('#add-approved-feature-request').click(function() {
                                 <p style="margin-bottom: 0px;" class="card-text"><b>Client:</b> '+ feature_request.user_first_name +' '+feature_request.user_last_name+' <br /> <b>Company:</b> '+feature_request.user_company+' <br /> <b>Target Date: </b> '+feature_request.target_date+' <br/> <b>Client Priority: </b> '+feature_request.client_priority+' <br/> <b>Product Area:</b> '+feature_request.product_area+' <br /> <b>Description:</b> '+ feature_request.description +' </p>\
                               </div>\
                             </div>');
+                            
                           });
                        }
                     });
