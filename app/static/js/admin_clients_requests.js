@@ -42,16 +42,11 @@ $('.feature-requests-link').click(function() {
               </div>\
             </div>\
           </div>');
-
         });
-
       } else {
         $('.feature-clients-title').html("No Feature Requests!");
       }
-
       });
-
-
     }
   });
 });

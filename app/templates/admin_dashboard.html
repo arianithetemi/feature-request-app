@@ -1,6 +1,8 @@
 {% extends "main_layout.html" %}
 
 {% block header %}
+   <script src="{{ url_for('static', filename='js/bootstrap-datepicker.min.js') }}"></script>
+   <link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap-datepicker.min.css') }}" />
    <style>
    body {background-color: #fbfbfb; }
    .border-top { border-top: 1px solid #e5e5e5; }
@@ -123,7 +125,7 @@
          <!-- Admin Menu -->
          <div class="nav flex-column nav-pills" id="v-pills-tab" role="tablist" aria-orientation="vertical">
            <a class="nav-link main-link active" data-toggle="pill" href="#overview" role="tab" aria-controls="overview" aria-selected="true">Overview</a>
-           <a class="nav-link main-link" data-toggle="pill" href="#feature-requests" role="tab" aria-controls="feature-requests" aria-selected="false">Main Feature Requests</a>
+           <a class="nav-link main-link main-feature-requests" data-toggle="pill" href="#feature-requests" role="tab" aria-controls="feature-requests" aria-selected="false">Main Feature Requests</a>
            <a class="nav-link main-link feature-requests-link" data-toggle="pill" href="#clients-requests" role="tab" aria-controls="clients-requests" aria-selected="false">Clients Requests</a>
            <a class="nav-link main-link manage-clients-link" data-toggle="pill" href="#manage-clients" role="tab" aria-controls="manage-clients" aria-selected="false">Manage Clients</a>
            <a class="nav-link main-link manage-admins-link" data-toggle="pill" href="#manage-admins" role="tab" aria-controls="manage-admins" aria-selected="false">Manage Admins</a>
@@ -137,18 +139,75 @@
             <div class="tab-pane fade show active" id="overview" role="tabpanel" aria-labelledby="overview">overview</div>
 
             <!-- Feature Requests -->
-            <div class="tab-pane fade" id="feature-requests" role="tabpanel" aria-labelledby="feature-requests-s">feature-requests</div>
+            <div class="tab-pane fade" id="feature-requests" role="tabpanel" aria-labelledby="feature-requests-s">
+              <div class="row mb-4">
+                <div class="col text-right">
+                  <button type="button" id="add-approved-feature-request" data-toggle="modal" data-target="#add-approved-feature-request-modal" class="btn btn-primary">+ Add Feature Request</button>
+                </div>
+                <!-- Add new feature Modal -->
+                <div class="modal fade" id="add-approved-feature-request-modal" tabindex="-1" role="dialog" aria-hidden="true">
+                  <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                      <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">Add new feature request</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                          <span aria-hidden="true">&times;</span>
+                        </button>
+                      </div>
+                      <div class="modal-body">
+                         <form id="add-approved-feature-request-form">
+                            <div class="form-group">
+                              <label for="subject-input">Title: </label>
+                              <input type="text" placeholder="Short descriptive name" data-bind="textInput: title" id="title-input" class="form-control">
+                            </div>
+                            <div class="form-group">
+                              <label for="description-input">Description: </label>
+                               <textarea class="form-control" data-bind="textInput: description" placeholder="Details about this feature request" id="description-input" rows="3"></textarea>
+                            </div>
+
+                            <div class="form-group">
+                              <label for="client-input">Clients: </label>
+                              <select class="custom-select" data-bind='options: clientsSelection, optionsValue: "publicId", optionsText: "fullNameCompany", optionsCaption: "Please select a client", value: clientSelect' ></select>
+                            </div>
+
+                            <div class="form-group">
+                              <label for="client-priority">Client Priority:</label>
+                              <input type="number" data-bind="textInput: clientPriority"  placeholder="Number" id="client-priority-input" class="form-control">
+                            </div>
+
+                            <div class="form-group date">
+                              <label for="client-priority">Target Date: </label>
+                              <input type="text" data-bind="textInput: targetDate" value="Choose date" class="form-control">
+                              <span class="input-group-addon"><i class="glyphicon glyphicon-th"></i></span>
+                            </div>
+
+                            <div class="form-group">
+                              <label for="client-input">Product Area: </label>
+                              <select class="custom-select" data-bind='options: areaSelection, optionsValue: "areaName", optionsText: "areaName", optionsCaption: "Choose the area", value: areaSelect' ></select>
+                            </div>
+
+                            <div class="modal-footer" style="padding: 10px 0 0 0;">
+                               <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                               <button type="submit" data-bind="click: submit" class="btn btn-primary">Submit</button>
+                            </div>
+                         </form>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+
+            </div>
 
             <!-- Clients Requests -->
             <div class="tab-pane fade" id="clients-requests" role="tabpanel" aria-labelledby="clients-requests">
-
               <div class="row">
                 <div class="col">
                   <h4 class="title feature-clients-title"></h4>
                   <div class="col client-feature-requests-cont"></div>
                 </div>
               </div>
-
             </div>
 
             <!-- Manage Clients -->
@@ -391,4 +450,5 @@
    <script src="{{ url_for('static', filename='js/manage-admins.js') }}"></script>
    <script src="{{ url_for('static', filename='js/profile.js') }}"></script>
    <script src="{{ url_for('static', filename='js/admin_clients_requests.js') }}"></script>
+   <script src="{{ url_for('static', filename='js/admin_main_feature_requests.js') }}"></script>
 {% endblock %}
