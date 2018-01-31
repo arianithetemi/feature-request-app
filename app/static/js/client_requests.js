@@ -182,7 +182,7 @@ var addFeatureRequestViewModel = {
             data: JSON.stringify(jsonData),
             headers: {"x-access-token": localStorage.getItem('token')},
             success: function(feature_request) {
-              swal("Success!", "Admin has been successfully saved!", "success")
+              swal("Success!", "Feature request has been successfully saved!", "success")
                  .then(function() {
                     $('#add-feature-request-modal').modal('hide');
                     $('#add-feature-request-form').trigger('reset');
