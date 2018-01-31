@@ -31,13 +31,17 @@ body {
   /* font-family: 'PT Sans', sans-serif; */
 }
 
-.info {
+.main-page {
+  margin-top: 12%;
+}
+
+/* .info {
   margin-top: 10%;
 }
 
 .sign-up {
    margin-top: 15%;
-}
+} */
 
 .info h1 {
    font-weight: bold;
