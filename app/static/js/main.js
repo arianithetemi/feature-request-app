@@ -41,6 +41,10 @@ $(document).ready(function() {
                     headers: {"x-access-token": localStorage.getItem('token')},
                     success: function(data) {
                       document.write(data);
+
+                      setTimeout(function(){
+                        window.stop();
+                      }, 1000);
                     }
                   });
                }
