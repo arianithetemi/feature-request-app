@@ -150,6 +150,7 @@ def get_all_messages_by_correspondence(current_user, correspondence_public_id):
 '''
 @mod_feature_request_api.route('/accept/<feature_request_public_id>', methods=['PUT'])
 @token_required
+@role_required('admin')
 def mark_as_accepted_client_request(current_user, feature_request_public_id):
     # Find the feature request by public id
     feature_request = ClientRequest.query.filter_by(public_id=feature_request_public_id).first()
@@ -245,6 +246,7 @@ def get_all_clients_approved_feature_requests(current_user):
 '''
 @mod_feature_request_api.route('/progress/<feature_request_public_id>', methods=['PUT'])
 @token_required
+@role_required('admin')
 def set_in_progress_client_request(current_user, feature_request_public_id):
     # Find the feature request by public id
     feature_request = FeatureRequest.query.filter_by(public_id=feature_request_public_id).first()
@@ -263,6 +265,7 @@ def set_in_progress_client_request(current_user, feature_request_public_id):
 '''
 @mod_feature_request_api.route('/close/<feature_request_public_id>', methods=['PUT'])
 @token_required
+@role_required('admin')
 def mark_closed_client_request(current_user, feature_request_public_id):
     # Find the feature request by public id
     feature_request = FeatureRequest.query.filter_by(public_id=feature_request_public_id).first()

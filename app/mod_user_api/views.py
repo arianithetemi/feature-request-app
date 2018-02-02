@@ -81,8 +81,18 @@ def add_user():
     db.session.add(role)
     db.session.commit()
 
+    # Making JSON response with created admin user data
+    user_data = {}
+    user_data['public_id'] = user.public_id
+    user_data['first_name'] = user.first_name
+    user_data['last_name'] = user.last_name
+    user_data['username'] = user.username
+    user_data['email_address'] = user.email_address
+    user_data['role'] = user.role.name
+    user_data['company'] = user.company
+
     # Returning message in json
-    return jsonify({'message': 'Successfully user created!', 'status': 'inactive'})
+    return jsonify({'message': 'Successfully user created!', 'status': 'inactive', 'user': user_data})
 
 '''
     Creating New Admin User Endpoint
@@ -125,8 +135,18 @@ def add_admin(current_user):
     db.session.add(role)
     db.session.commit()
 
+    # Making JSON response with created admin user data
+    user_data = {}
+    user_data['public_id'] = user.public_id
+    user_data['first_name'] = user.first_name
+    user_data['last_name'] = user.last_name
+    user_data['username'] = user.username
+    user_data['email_address'] = user.email_address
+    user_data['role'] = user.role.name
+    user_data['company'] = user.company
+
     # Returning message in json
-    return jsonify({'message': 'Successfully admin user created!', 'status': 'active'})
+    return jsonify({'message': 'Successfully admin user created!', 'status': 'active', 'user': user_data})
 
 '''
     Get One User Endpoint - Token is required
