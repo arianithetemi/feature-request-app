@@ -1,8 +1,10 @@
 
-function populateMainFeaturesRequests() {
+// Ajax call for populating approved feature request
+const populateApprovedFeatureRequests = function() {
+  // Removing the content in the container
   $('.approved-feature-requests-cont').html("");
-  $('.inprogress-feature-requests-cont').html("");
-  $('.closed-feature-requests-cont').html("");
+
+  // Ajax call to API
   $.ajax({
     url: '/api/feature-request/approved',
     contentType: 'application/json',
@@ -10,70 +12,136 @@ function populateMainFeaturesRequests() {
     method: 'GET',
     headers: {"x-access-token": localStorage.getItem('token')},
     success: function(res) {
+        // Looping in the all clients from API
         res.data.map(client => {
-        if (client.approved_feature_requests.length > 0) {
-          client.approved_feature_requests.map(feature_request => {
+          // If there is any approved feature request
+          if(client.approved_feature_requests.length > 0) {
+              // Looping in all feature requests of all clients
+              client.approved_feature_requests.map(feature_request => {
+                var badge, acceptBtn;
+                if (feature_request.status == "Approved") {
+                  badge = '<span style="top: -2px; position:relative;" id="badge-'+feature_request.public_id+'" class="badge badge-success">Approved</span>';
+                  acceptBtn = '<button data-requestPublicId='+feature_request.public_id+' class="btn btn-sm btn-warning float-right mark-in-progress">Set in progress</button>';
 
-          var badge, acceptBtn;
-          if (feature_request.status == "Approved") {
-            badge = '<span style="top: -2px; position:relative;" id="badge-'+feature_request.public_id+'" class="badge badge-success">Approved</span>';
-            acceptBtn = '<button data-requestPublicId='+feature_request.public_id+' class="btn btn-sm btn-warning float-right mark-in-progress">Set in progress</button>';
-
-            // Populating the content in HTML
-            $('.approved-clients-title').hide();
-            setTimeout(function() { $('.approved-feature-requests-cont').prepend('<div class="card mb-4">\
-              <div class="card-header"><h5 style="display:inline">'+ feature_request.title + "</h5> " + badge +' '+ acceptBtn +'</div> \
-              <div class="card-body">\
-                <p style="margin-bottom: 0px;" class="card-text"><b>Client:</b> '+ client.first_name +' '+client.last_name+' <br /> <b>Company:</b> '+client.company+' <br /> <b>Target Date: </b> '+feature_request.target_date+' <br/> <b>Client Priority: </b> '+feature_request.client_priority+' <br/> <b>Product Area:</b> '+feature_request.product_area+' <br /> <b>Description:</b> '+ feature_request.description +' </p>\
-              </div>\
-            </div>');
-          }, 150);
-
-          } else if (feature_request.status == "In Progress") {
-            badge = '<span style="top: -2px; position:relative;" id="badge-'+feature_request.public_id+'" class="badge badge-warning">In Progress</span>';
-            acceptBtn = '<button data-requestPublicId='+feature_request.public_id+' class="btn btn-sm btn-danger float-right mark-closed">Mark as Closed</button>';
-
-            $('.in-progress-clients-title').hide();
-            setTimeout(function() { $('.inprogress-feature-requests-cont').prepend('<div class="card mb-4">\
-              <div class="card-header"><h5 style="display:inline">'+ feature_request.title + "</h5> " + badge +' '+ acceptBtn +'</div> \
-              <div class="card-body">\
-                <p style="margin-bottom: 0px;" class="card-text"><b>Client:</b> '+ client.first_name +' '+client.last_name+' <br /> <b>Company:</b> '+client.company+' <br /> <b>Target Date: </b> '+feature_request.target_date+' <br/> <b>Client Priority: </b> '+feature_request.client_priority+' <br/> <b>Product Area:</b> '+feature_request.product_area+' <br /> <b>Description:</b> '+ feature_request.description +' </p>\
-              </div>\
-            </div>');
-          }, 150);
-
-        } else if (feature_request.status == "Closed") {
-
-            badge = '<span style="top: -2px; position:relative;" class="badge badge-danger">Closed</span>';
-
-            $('.closed-clients-title').hide();
-            setTimeout(function() { $('.closed-feature-requests-cont').prepend('<div class="card mb-4">\
-              <div class="card-header"><h5 style="display:inline">'+ feature_request.title + "</h5> " + badge +'</div> \
-              <div class="card-body">\
-                <p style="margin-bottom: 0px;" class="card-text"><b>Client:</b> '+ client.first_name +' '+client.last_name+' <br /> <b>Company:</b> '+client.company+' <br /> <b>Target Date: </b> '+feature_request.target_date+' <br/> <b>Client Priority: </b> '+feature_request.client_priority+' <br/> <b>Product Area:</b> '+feature_request.product_area+' <br /> <b>Description:</b> '+ feature_request.description +' </p>\
-              </div>\
-            </div>');
-          }, 150);
+                  // Populating the feature requests in HTML
+                  $('.approved-clients-title').hide();
+                  $('.approved-feature-requests-cont').prepend('<div class="card mb-4">\
+                    <div class="card-header"><h5 style="display:inline">'+ feature_request.title + "</h5> " + badge +' '+ acceptBtn +'</div> \
+                    <div class="card-body">\
+                      <p style="margin-bottom: 0px;" class="card-text"><b>Client:</b> '+ client.first_name +' '+client.last_name+' <br /> <b>Company:</b> '+client.company+' <br /> <b>Target Date: </b> '+feature_request.target_date+' <br/> <b>Client Priority: </b> '+feature_request.client_priority+' <br/> <b>Product Area:</b> '+feature_request.product_area+' <br /> <b>Description:</b> '+ feature_request.description +' </p>\
+                    </div>\
+                  </div>');
+                }
+              });
+          } else {
+            // If there is no feature request
+            $('.approved-clients-title').html("No Approved Feature Requests!");
           }
-        });
-      } else {
-        $('.approved-clients-title, .in-progress-clients-title, .closed-clients-title').html("No Feature Requests!");
-      }
       });
     }
   });
 }
 
-// Populate the Main Feature Requests without click on init
-populateMainFeaturesRequests();
+// Ajax call for populating in progress approved feature requests
+const populateInProgressApprovedFeatureRequests = function() {
+  // Removing the content in the container
+  $('.inprogress-feature-requests-cont').html("");
+
+  // Ajax call to API
+  $.ajax({
+    url: '/api/feature-request/approved',
+    contentType: 'application/json',
+    dataType: 'json',
+    method: 'GET',
+    headers: {"x-access-token": localStorage.getItem('token')},
+    success: function(res) {
+        // Looping in the all clients from API
+        res.data.map(client => {
+          // If there is any approved feature request
+          if(client.approved_feature_requests.length > 0) {
+              // Looping in all feature requests of all clients
+              client.approved_feature_requests.map(feature_request => {
+                var badge, acceptBtn;
+                if (feature_request.status == "In Progress") {
+                  badge = '<span style="top: -2px; position:relative;" id="badge-'+feature_request.public_id+'" class="badge badge-warning">In Progress</span>';
+                  acceptBtn = '<button data-requestPublicId='+feature_request.public_id+' class="btn btn-sm btn-danger float-right mark-closed">Mark as Closed</button>';
+
+                  $('.in-progress-clients-title').hide();
+                  $('.inprogress-feature-requests-cont').prepend('<div class="card mb-4">\
+                    <div class="card-header"><h5 style="display:inline">'+ feature_request.title + "</h5> " + badge +' '+ acceptBtn +'</div> \
+                    <div class="card-body">\
+                      <p style="margin-bottom: 0px;" class="card-text"><b>Client:</b> '+ client.first_name +' '+client.last_name+' <br /> <b>Company:</b> '+client.company+' <br /> <b>Target Date: </b> '+feature_request.target_date+' <br/> <b>Client Priority: </b> '+feature_request.client_priority+' <br/> <b>Product Area:</b> '+feature_request.product_area+' <br /> <b>Description:</b> '+ feature_request.description +' </p>\
+                    </div>\
+                  </div>');
+                }
+              });
+          } else {
+            // If there is no feature request in progress
+            $('.in-progress-clients-title').html("No In Progress Approved Feature Requests!");
+          }
+      });
+    }
+  });
+}
+
+// Ajax call for populating closed approved feature requests
+const populateClosedApprovedFeatureRequests = function() {
+  // Removing the content in the container
+  $('.closed-feature-requests-cont').html("");
+
+  // Ajax call to API
+  $.ajax({
+    url: '/api/feature-request/approved',
+    contentType: 'application/json',
+    dataType: 'json',
+    method: 'GET',
+    headers: {"x-access-token": localStorage.getItem('token')},
+    success: function(res) {
+        // Looping in the all clients from API
+        res.data.map(client => {
+          // If there is any approved feature request
+          if(client.approved_feature_requests.length > 0) {
+              // Looping in all feature requests of all clients
+              client.approved_feature_requests.map(feature_request => {
+                var badge, acceptBtn;
+                if (feature_request.status == "Closed") {
+                  badge = '<span style="top: -2px; position:relative;" class="badge badge-danger">Closed</span>';
+                  $('.closed-clients-title').hide();
+                  $('.closed-feature-requests-cont').prepend('<div class="card mb-4">\
+                    <div class="card-header"><h5 style="display:inline">'+ feature_request.title + "</h5> " + badge +'</div> \
+                    <div class="card-body">\
+                      <p style="margin-bottom: 0px;" class="card-text"><b>Client:</b> '+ client.first_name +' '+client.last_name+' <br /> <b>Company:</b> '+client.company+' <br /> <b>Target Date: </b> '+feature_request.target_date+' <br/> <b>Client Priority: </b> '+feature_request.client_priority+' <br/> <b>Product Area:</b> '+feature_request.product_area+' <br /> <b>Description:</b> '+ feature_request.description +' </p>\
+                    </div>\
+                  </div>');
+                }
+              });
+          } else {
+            // If there is no feature request in progress
+            $('.closed-clients-title').html("No Closed Approved Feature Requests!");
+          }
+      });
+    }
+  });
+}
 
 // populate The main feature requests when clicking on the link
 $('.main-feature-requests-link').click(function() {
-  populateMainFeaturesRequests();
+  // populateMainFeaturesRequests();
+  populateApprovedFeatureRequests();
 });
 
-$('#add-approved-feature-request').click(function() {
+// populate in progress feature requests when clicking on the link
+$('.in-progress-main-feature-requests-link').click(function() {
+  populateInProgressApprovedFeatureRequests();
+});
 
+// populate closed feature requests when clicking on the link
+$('.closed-main-feature-requests-link').click(function() {
+  populateClosedApprovedFeatureRequests();
+});
+
+// Adding new approved feature request
+$('#add-approved-feature-request').click(function() {
   // Showing datepicker
   setTimeout(function(){
     $('.date').datepicker({
@@ -141,7 +209,7 @@ $('#add-approved-feature-request').click(function() {
                             $('#add-approved-feature-request-modal').modal('hide');
                             $('#add-approved-feature-request-form').trigger('reset');
 
-                            populateMainFeaturesRequests();
+                            populateApprovedFeatureRequests();
 
                           });
                        }
@@ -176,10 +244,9 @@ $('#add-approved-feature-request').click(function() {
 
 });
 
-
+// Setting in progress an approved feature request
 $('body').on('click', '.mark-in-progress', function() {
   var clientRequestPublicId = $(this).attr('data-requestPublicId');
-
   swal({
     title: "Are you sure?",
     text: "You want to set this feature request in progress!",
@@ -198,7 +265,7 @@ $('body').on('click', '.mark-in-progress', function() {
         success: data => {
           if(data.message == 'Feature request successfully set in progress') {
             swal("Success!", "Feature request set in progress!", "success")
-            populateMainFeaturesRequests();
+            populateInProgressApprovedFeatureRequests();
           }
         }
       });
@@ -208,6 +275,7 @@ $('body').on('click', '.mark-in-progress', function() {
   });
 });
 
+// Marking as closed an approved feature request
 $('body').on('click', '.mark-closed', function() {
   var clientRequestPublicId = $(this).attr('data-requestPublicId');
 
@@ -229,7 +297,7 @@ $('body').on('click', '.mark-closed', function() {
         success: data => {
           if(data.message == 'Feature request successfully marked as closed') {
             swal("Success!", "Feature request successfully marked as closed!", "success")
-            populateMainFeaturesRequests();
+            populateClosedApprovedFeatureRequests();
           }
         }
       });
