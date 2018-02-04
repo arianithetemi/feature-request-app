@@ -1,3 +1,77 @@
+
+function populateMainFeaturesRequests() {
+  $('.approved-feature-requests-cont').html("");
+  $('.inprogress-feature-requests-cont').html("");
+  $('.closed-feature-requests-cont').html("");
+  $.ajax({
+    url: '/api/feature-request/approved',
+    contentType: 'application/json',
+    dataType: 'json',
+    method: 'GET',
+    headers: {"x-access-token": localStorage.getItem('token')},
+    success: function(res) {
+        res.data.map(client => {
+        if (client.approved_feature_requests.length > 0) {
+          client.approved_feature_requests.map(feature_request => {
+
+          var badge, acceptBtn;
+          if (feature_request.status == "Approved") {
+            badge = '<span style="top: -2px; position:relative;" id="badge-'+feature_request.public_id+'" class="badge badge-success">Approved</span>';
+            acceptBtn = '<button data-requestPublicId='+feature_request.public_id+' class="btn btn-sm btn-warning float-right mark-in-progress">Set in progress</button>';
+
+            // Populating the content in HTML
+            $('.approved-clients-title').hide();
+            setTimeout(function() { $('.approved-feature-requests-cont').prepend('<div class="card mb-4">\
+              <div class="card-header"><h5 style="display:inline">'+ feature_request.title + "</h5> " + badge +' '+ acceptBtn +'</div> \
+              <div class="card-body">\
+                <p style="margin-bottom: 0px;" class="card-text"><b>Client:</b> '+ client.first_name +' '+client.last_name+' <br /> <b>Company:</b> '+client.company+' <br /> <b>Target Date: </b> '+feature_request.target_date+' <br/> <b>Client Priority: </b> '+feature_request.client_priority+' <br/> <b>Product Area:</b> '+feature_request.product_area+' <br /> <b>Description:</b> '+ feature_request.description +' </p>\
+              </div>\
+            </div>');
+          }, 150);
+
+          } else if (feature_request.status == "In Progress") {
+            badge = '<span style="top: -2px; position:relative;" id="badge-'+feature_request.public_id+'" class="badge badge-warning">In Progress</span>';
+            acceptBtn = '<button data-requestPublicId='+feature_request.public_id+' class="btn btn-sm btn-danger float-right mark-closed">Mark as Closed</button>';
+
+            $('.in-progress-clients-title').hide();
+            setTimeout(function() { $('.inprogress-feature-requests-cont').prepend('<div class="card mb-4">\
+              <div class="card-header"><h5 style="display:inline">'+ feature_request.title + "</h5> " + badge +' '+ acceptBtn +'</div> \
+              <div class="card-body">\
+                <p style="margin-bottom: 0px;" class="card-text"><b>Client:</b> '+ client.first_name +' '+client.last_name+' <br /> <b>Company:</b> '+client.company+' <br /> <b>Target Date: </b> '+feature_request.target_date+' <br/> <b>Client Priority: </b> '+feature_request.client_priority+' <br/> <b>Product Area:</b> '+feature_request.product_area+' <br /> <b>Description:</b> '+ feature_request.description +' </p>\
+              </div>\
+            </div>');
+          }, 150);
+
+        } else if (feature_request.status == "Closed") {
+
+            badge = '<span style="top: -2px; position:relative;" class="badge badge-danger">Closed</span>';
+
+            $('.closed-clients-title').hide();
+            setTimeout(function() { $('.closed-feature-requests-cont').prepend('<div class="card mb-4">\
+              <div class="card-header"><h5 style="display:inline">'+ feature_request.title + "</h5> " + badge +'</div> \
+              <div class="card-body">\
+                <p style="margin-bottom: 0px;" class="card-text"><b>Client:</b> '+ client.first_name +' '+client.last_name+' <br /> <b>Company:</b> '+client.company+' <br /> <b>Target Date: </b> '+feature_request.target_date+' <br/> <b>Client Priority: </b> '+feature_request.client_priority+' <br/> <b>Product Area:</b> '+feature_request.product_area+' <br /> <b>Description:</b> '+ feature_request.description +' </p>\
+              </div>\
+            </div>');
+          }, 150);
+          }
+        });
+      } else {
+        $('.approved-clients-title, .in-progress-clients-title, .closed-clients-title').html("No Feature Requests!");
+      }
+      });
+    }
+  });
+}
+
+// Populate the Main Feature Requests without click on init
+populateMainFeaturesRequests();
+
+// populate The main feature requests when clicking on the link
+$('.main-feature-requests-link').click(function() {
+  populateMainFeaturesRequests();
+});
+
 $('#add-approved-feature-request').click(function() {
 
   // Showing datepicker
@@ -67,15 +141,7 @@ $('#add-approved-feature-request').click(function() {
                             $('#add-approved-feature-request-modal').modal('hide');
                             $('#add-approved-feature-request-form').trigger('reset');
 
-                            badge = '<span style="top: -2px; position:relative;" id="badge-'+feature_request.public_id+'" class="badge badge-success">Approved</span>';
-                            acceptBtn = '<button data-requestPublicId='+feature_request.public_id+' class="btn btn-sm btn-warning float-right mark-in-progress">Set in progress</button>';
-
-                            $('.approved-feature-requests-cont').prepend('<div class="card mb-4">\
-                              <div class="card-header"><h5 style="display:inline">'+ feature_request.title + "</h5> " + badge +' '+ acceptBtn +'</div> \
-                              <div class="card-body">\
-                                <p style="margin-bottom: 0px;" class="card-text"><b>Client:</b> '+ feature_request.user_first_name +' '+feature_request.user_last_name+' <br /> <b>Company:</b> '+feature_request.user_company+' <br /> <b>Target Date: </b> '+feature_request.target_date+' <br/> <b>Client Priority: </b> '+feature_request.client_priority+' <br/> <b>Product Area:</b> '+feature_request.product_area+' <br /> <b>Description:</b> '+ feature_request.description +' </p>\
-                              </div>\
-                            </div>');
+                            populateMainFeaturesRequests();
 
                           });
                        }
@@ -110,72 +176,6 @@ $('#add-approved-feature-request').click(function() {
 
 });
 
-$('.main-feature-requests-link').click(function() {
-
-  $('.approved-feature-requests-cont').html("");
-  $('.inprogress-feature-requests-cont').html("");
-  $('.closed-feature-requests-cont').html("");
-  $.ajax({
-    url: '/api/feature-request/approved',
-    contentType: 'application/json',
-    dataType: 'json',
-    method: 'GET',
-    headers: {"x-access-token": localStorage.getItem('token')},
-    success: function(res) {
-        res.data.map(client => {
-        if (client.approved_feature_requests.length > 0) {
-          client.approved_feature_requests.map(feature_request => {
-
-          var badge, acceptBtn;
-          if (feature_request.status == "Approved") {
-            badge = '<span style="top: -2px; position:relative;" id="badge-'+feature_request.public_id+'" class="badge badge-success">Approved</span>';
-            acceptBtn = '<button data-requestPublicId='+feature_request.public_id+' class="btn btn-sm btn-warning float-right mark-in-progress">Set in progress</button>';
-
-            // Populating the content in HTML
-            $('.approved-clients-title').hide();
-            setTimeout(function() { $('.approved-feature-requests-cont').prepend('<div class="card mb-4">\
-              <div class="card-header"><h5 style="display:inline">'+ feature_request.title + "</h5> " + badge +' '+ acceptBtn +'</div> \
-              <div class="card-body">\
-                <p style="margin-bottom: 0px;" class="card-text"><b>Client:</b> '+ client.first_name +' '+client.last_name+' <br /> <b>Company:</b> '+client.company+' <br /> <b>Target Date: </b> '+feature_request.target_date+' <br/> <b>Client Priority: </b> '+feature_request.client_priority+' <br/> <b>Product Area:</b> '+feature_request.product_area+' <br /> <b>Description:</b> '+ feature_request.description +' </p>\
-              </div>\
-            </div>');
-          }, 200);
-
-          } else if (feature_request.status == "In Progress") {
-            badge = '<span style="top: -2px; position:relative;" id="badge-'+feature_request.public_id+'" class="badge badge-warning">In Progress</span>';
-            acceptBtn = '<button data-requestPublicId='+feature_request.public_id+' class="btn btn-sm btn-danger float-right mark-closed">Mark as Closed</button>';
-
-            $('.in-progress-clients-title').hide();
-            setTimeout(function() { $('.inprogress-feature-requests-cont').prepend('<div class="card mb-4">\
-              <div class="card-header"><h5 style="display:inline">'+ feature_request.title + "</h5> " + badge +' '+ acceptBtn +'</div> \
-              <div class="card-body">\
-                <p style="margin-bottom: 0px;" class="card-text"><b>Client:</b> '+ client.first_name +' '+client.last_name+' <br /> <b>Company:</b> '+client.company+' <br /> <b>Target Date: </b> '+feature_request.target_date+' <br/> <b>Client Priority: </b> '+feature_request.client_priority+' <br/> <b>Product Area:</b> '+feature_request.product_area+' <br /> <b>Description:</b> '+ feature_request.description +' </p>\
-              </div>\
-            </div>');
-          }, 200);
-
-        } else if (feature_request.status == "Closed") {
-
-            badge = '<span style="top: -2px; position:relative;" class="badge badge-danger">Closed</span>';
-
-            $('.closed-clients-title').hide();
-            setTimeout(function() { $('.closed-feature-requests-cont').prepend('<div class="card mb-4">\
-              <div class="card-header"><h5 style="display:inline">'+ feature_request.title + "</h5> " + badge +'</div> \
-              <div class="card-body">\
-                <p style="margin-bottom: 0px;" class="card-text"><b>Client:</b> '+ client.first_name +' '+client.last_name+' <br /> <b>Company:</b> '+client.company+' <br /> <b>Target Date: </b> '+feature_request.target_date+' <br/> <b>Client Priority: </b> '+feature_request.client_priority+' <br/> <b>Product Area:</b> '+feature_request.product_area+' <br /> <b>Description:</b> '+ feature_request.description +' </p>\
-              </div>\
-            </div>');
-          }, 200);
-          }
-        });
-      } else {
-        $('.approved-clients-title, .in-progress-clients-title, .closed-clients-title').html("No Feature Requests!");
-      }
-      });
-    }
-  });
-});
-
 
 $('body').on('click', '.mark-in-progress', function() {
   var clientRequestPublicId = $(this).attr('data-requestPublicId');
@@ -198,6 +198,7 @@ $('body').on('click', '.mark-in-progress', function() {
         success: data => {
           if(data.message == 'Feature request successfully set in progress') {
             swal("Success!", "Feature request set in progress!", "success")
+            populateMainFeaturesRequests();
           }
         }
       });
@@ -228,6 +229,7 @@ $('body').on('click', '.mark-closed', function() {
         success: data => {
           if(data.message == 'Feature request successfully marked as closed') {
             swal("Success!", "Feature request successfully marked as closed!", "success")
+            populateMainFeaturesRequests();
           }
         }
       });
