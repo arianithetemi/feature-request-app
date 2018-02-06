@@ -31,17 +31,14 @@ body {
   /* font-family: 'PT Sans', sans-serif; */
 }
 
-.main-page {
-  margin-top: 12%;
-}
 
-/* .info {
-  margin-top: 10%;
+.vertical-middle-align {
+  /* margin-top: 12%; */
+  min-height: 100%;  /* Fallback for browsers do NOT support vh unit */
+  min-height: 100vh; /* These two lines are counted as one :-)       */
+  display: flex;
+  align-items: center;
 }
-
-.sign-up {
-   margin-top: 15%;
-} */
 
 .info h1 {
    font-weight: bold;
