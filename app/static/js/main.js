@@ -40,11 +40,14 @@ $(document).ready(function() {
                     type: 'GET',
                     headers: {"x-access-token": localStorage.getItem('token')},
                     success: function(data) {
-                      document.write(data);
+                      $(".se-pre-con").show().delay(700).fadeOut('slow');
 
                       setTimeout(function(){
-                        window.stop();
-                      }, 1000);
+                        document.write(data);
+                        setTimeout(() => {
+                          window.stop();
+                        }, 750);
+                      }, 700);
                     }
                   });
                }
@@ -70,11 +73,11 @@ $(document).ready(function() {
             if (typeof data == 'string') {
               setTimeout(function() {
                 document.write(data);
-              }, 500);
+                setTimeout(function(){
+                  window.stop();
+                }, 600);
+              }, 300);
 
-               setTimeout(function(){
-                 window.stop();
-               }, 1800);
             } else {
                localStorage.removeItem('token');
                window.location.href = '/';

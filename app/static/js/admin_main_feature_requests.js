@@ -41,6 +41,7 @@ const populateApprovedFeatureRequests = function() {
     }
   });
 }
+populateApprovedFeatureRequests();
 
 // Ajax call for populating in progress approved feature requests
 const populateInProgressApprovedFeatureRequests = function() {
