@@ -241,7 +241,7 @@ $('#add-approved-feature-request').click(function() {
 
   $('#add-approved-feature-request-modal').on('hidden.bs.modal', function () {
     $('.validationMessage').hide();
-  })
+  });
 
 });
 
